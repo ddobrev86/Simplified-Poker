@@ -29,5 +29,8 @@
     <ClInclude Include="Deck Structures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Player Structures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

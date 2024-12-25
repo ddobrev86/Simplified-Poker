@@ -16,10 +16,11 @@
 #include <iostream>
 #include "Deck Structures.h"
 #include "Initialisation Functions.h"
+#include "Player Structures.h"
 
 const unsigned TYPES_COUNT = 8;
 const unsigned SUITS_COUNT = 4;
-const unsigned CARDS_COUNT = TYPES_COUNT * SUITS_COUNT;
+const unsigned CARDS_IN_DECK = TYPES_COUNT * SUITS_COUNT;
 
 const CardType CARD_TYPES[] = {
 	{"7", 7},
@@ -32,26 +33,49 @@ const CardType CARD_TYPES[] = {
 	{"A", 11}
 };
 
-const char SUITS[] = {
-	'C',
-	'D',
-	'H',
-	'S'
+const CardSuit SUITS[] = {
+	{'C', 1},
+	{'D', 2},
+	{'H', 3},
+	{'S', 4},
 };
 
-const Card* deck = fillDeckWithCards(CARD_TYPES, SUITS, TYPES_COUNT, SUITS_COUNT, CARDS_COUNT);
+Card* deck = fillDeckWithCards(CARD_TYPES, SUITS, TYPES_COUNT, SUITS_COUNT, CARDS_IN_DECK);
 
-void printDeck(const Card* deck, const unsigned CARDS_COUNT)
+void printDeck(const Card* deck, const unsigned cardsCount)
 {
-	for (size_t i = 0; i < CARDS_COUNT; i++)
+	for (size_t i = 0; i < cardsCount; i++)
 	{
-		std::cout << deck[i].type->pip << deck[i].suit << std::endl;
+		std::cout << deck[i].type->pip << deck[i].suit->name << std::endl;
+	}
+}
+
+void printPlayers(const Player* players, const unsigned playerCount)
+{
+	for (size_t i = 0; i < playerCount; i++)
+	{
+		printDeck(players[i].cards, 3);
+		std::cout << '\n';
 	}
 }
 
 int main()
 {
-	printDeck(deck, CARDS_COUNT);
+	//printDeck(deck, CARDS_IN_DECK);
+	unsigned short playerCount;
+	std::cout << "Enter player count: ";
+	std::cin >> playerCount;
+
+	Player* players = new Player[playerCount];
+	dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
+	printPlayers(players, playerCount);
+
+	//--------------------------------------
+	delete[] deck;
+	deck = nullptr;
+
+	delete[] players;
+	players = nullptr;
 
 	return 0;
 }
