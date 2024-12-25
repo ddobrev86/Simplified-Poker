@@ -62,6 +62,8 @@ void printPlayers(const Player* players, const unsigned playerCount)
 int main()
 {
 	//printDeck(deck, CARDS_IN_DECK);
+
+	shuffleDeck(CARDS_IN_DECK, deck);
 	unsigned short playerCount;
 	std::cout << "Enter player count: ";
 	std::cin >> playerCount;

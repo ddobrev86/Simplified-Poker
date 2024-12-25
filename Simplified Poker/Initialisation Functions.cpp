@@ -15,6 +15,9 @@
 
 #include "Initialisation Functions.h"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <algorithm>
 
 Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites, 
 	const unsigned typesCount, const unsigned suitsCount, const unsigned cardsCount)
@@ -42,19 +45,31 @@ Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites,
 	return deck;
 }
 
-//void shuffleDeck(const unsigned cardsInDeck, Card* deck)
-//{
-//	if (!deck || cardsInDeck < 0)
-//	{
-//		std::cout << "Invalid input";
-//		return;
-//	}
-//
-//	for (size_t lhs = 0; lhs < cardsInDeck; lhs++)
-//	{
-//
-//	}
-//}
+void swapCards(Card& firstCard, Card& secondCard)
+{
+	Card temp = firstCard;
+	firstCard = secondCard;
+	secondCard = temp;
+}
+
+void shuffleDeck(const unsigned cardsInDeck, Card* deck)
+{
+	if (!deck || cardsInDeck < 0)
+	{
+		std::cout << "Invalid input";
+		return;
+	}
+
+	int rhs;
+	srand(time(0));
+
+	for (size_t lhs = 0; lhs < cardsInDeck; lhs++)
+	{
+		rhs = rand() % cardsInDeck;
+
+		swapCards(*(deck + lhs), *(deck + rhs));
+	}
+}
 
 void dealCardsToPlayers(const unsigned short playerCount, const unsigned short cardsPerPlayer,
 	Card* deck, Player* players)
