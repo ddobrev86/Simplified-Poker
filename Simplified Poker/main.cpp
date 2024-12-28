@@ -17,6 +17,7 @@
 #include "Deck Structures.h"
 #include "Initialisation Functions.h"
 #include "Player Structures.h"
+#include "Validations.h"
 
 const unsigned TYPES_COUNT = 8;
 const unsigned SUITS_COUNT = 4;
@@ -62,7 +63,8 @@ void printPlayers(const Player* players, const unsigned playerCount)
 int main()
 {
 	char gameCommand;
-	unsigned short playerCount;
+	unsigned short playerCount = 0;
+	Player* players = nullptr;
 
 	while (true)
 	{
@@ -71,8 +73,12 @@ int main()
 		switch (gameCommand)
 		{
 			case '1':
-				std::cout << "Enter number of players: ";
-				std::cin >> playerCount;
+				enterPlayerCount(playerCount);
+				players = new Player[playerCount];
+
+				shuffleDeck(CARDS_IN_DECK, deck);
+				dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
+
 				break;
 			case '2':
 				break;
@@ -85,14 +91,7 @@ int main()
 
 	}
 
-	shuffleDeck(CARDS_IN_DECK, deck);
-	unsigned short playerCount;
-	std::cout << "Enter player count: ";
-	std::cin >> playerCount;
-
-	Player* players = new Player[playerCount];
-	dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
-	printPlayers(players, playerCount);
+	//printPlayers(players, playerCount);
 
 	//--------------------------------------
 	delete[] deck;

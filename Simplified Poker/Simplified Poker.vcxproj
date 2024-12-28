@@ -141,11 +141,13 @@
   <ItemGroup>
     <ClCompile Include="Initialisation Functions.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Validations.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deck Structures.h" />
     <ClInclude Include="Initialisation Functions.h" />
     <ClInclude Include="Player Structures.h" />
+    <ClInclude Include="Validations.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
