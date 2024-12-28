@@ -21,10 +21,10 @@
 
 void printGameCommands()
 {
-	std::cout << "Choose an option:" << std::endl
-		<< "1. Start new game" << std::endl
+	std::cout << "1. Start new game" << std::endl
 		<< "2. Continue saved game" << std::endl
-		<< "3. Close program" << std::endl;
+		<< "3. Close program" << std::endl
+		<< "Choose an option:";
 }
 
 Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites, 

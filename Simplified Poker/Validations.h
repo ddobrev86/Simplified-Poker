@@ -14,4 +14,4 @@
 *
 */
 
-bool enterPlayerCount(unsigned short playerCount);
+void enterPlayerCount(unsigned short& playerCount);

@@ -1,3 +1,4 @@
+#pragma once
 /**
 *
 * Solution to course project # 10
@@ -9,20 +10,16 @@
 * @idnumber 3MI0600520
 * @compiler VC
 *
-* <header file for all structures, connected to the player>
+* <header file for helper functions that are used during the game>
 *
 */
 
-#pragma once
+#include "Player Structures.h"
 #include "Deck Structures.h"
 
-const unsigned short CARDS_PER_PLAYER = 3;
+void orderTwoCardsInPlayerHand(Card& firstCard, Card& secondCard);
 
-struct Player
-{
-	bool isActive;
-	bool outOfChips = false;
-	//unsigned short orderInGame;
-	unsigned int chips;
-	Card cards[CARDS_PER_PLAYER]{};
-};
+void orderPlayerCards(Player& player);
+
+unsigned short calculatePlayerPoints();
+

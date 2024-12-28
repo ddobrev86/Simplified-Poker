@@ -18,6 +18,7 @@
 #include "Initialisation Functions.h"
 #include "Player Structures.h"
 #include "Validations.h"
+#include "Game functions.h"
 
 const unsigned TYPES_COUNT = 8;
 const unsigned SUITS_COUNT = 4;
@@ -78,6 +79,13 @@ int main()
 
 				shuffleDeck(CARDS_IN_DECK, deck);
 				dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
+
+				for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
+				{
+					orderPlayerCards(players[playerIndx]);
+				}
+
+				printPlayers(players, playerCount);
 
 				break;
 			case '2':
