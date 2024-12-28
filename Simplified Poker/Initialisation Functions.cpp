@@ -17,7 +17,15 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <algorithm>
+//#include <algorithm>
+
+void printGameCommands()
+{
+	std::cout << "Choose an option:" << std::endl
+		<< "1. Start new game" << std::endl
+		<< "2. Continue saved game" << std::endl
+		<< "3. Close program" << std::endl;
+}
 
 Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites, 
 	const unsigned typesCount, const unsigned suitsCount, const unsigned cardsCount)

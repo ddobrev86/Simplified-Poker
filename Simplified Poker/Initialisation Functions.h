@@ -17,6 +17,8 @@
 #include "Deck Structures.h"
 #include "Player Structures.h"
 
+void printGameCommands();
+
 Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites,
 	const unsigned typesCount, const unsigned suitsCount, const unsigned cardsCount);
 

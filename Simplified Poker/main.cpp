@@ -61,7 +61,29 @@ void printPlayers(const Player* players, const unsigned playerCount)
 
 int main()
 {
-	//printDeck(deck, CARDS_IN_DECK);
+	char gameCommand;
+	unsigned short playerCount;
+
+	while (true)
+	{
+		printGameCommands();
+		std::cin >> gameCommand;
+		switch (gameCommand)
+		{
+			case '1':
+				std::cout << "Enter number of players: ";
+				std::cin >> playerCount;
+				break;
+			case '2':
+				break;
+			case '3':
+				break;
+			default:
+				std::cout << "Please choose a correct game option";
+				continue;
+		}
+
+	}
 
 	shuffleDeck(CARDS_IN_DECK, deck);
 	unsigned short playerCount;
