@@ -24,6 +24,32 @@ void orderPlayerCards(Player& player)
 	orderTwoCardsInPlayerHand(player.cards[1], player.cards[2]);
 }
 
+short countIdenticalCardTypes(Card* playerCards, size_t startIndex)
+{
+	if (!playerCards || startIndex < 0 || startIndex > 1)
+	{
+		return -1;
+	}
+
+	size_t endIndex = startIndex + 1;
+	unsigned short count = 0;
+
+	while (startIndex < endIndex)
+	{
+		if (playerCards[startIndex].type->value == playerCards[endIndex].type->value)
+			count++;
+
+		if (endIndex == CARDS_PER_PLAYER - 1)
+		{
+			startIndex++;
+			continue;
+		}
+
+		endIndex++;
+	}
+
+	return count;
+}
 
 unsigned short calculatePlayerPoints()
 {

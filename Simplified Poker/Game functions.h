@@ -21,5 +21,7 @@ void orderTwoCardsInPlayerHand(Card& firstCard, Card& secondCard);
 
 void orderPlayerCards(Player& player);
 
+unsigned short countIdenticalCardTypes(Card* playerCards);
+
 unsigned short calculatePlayerPoints();
 
