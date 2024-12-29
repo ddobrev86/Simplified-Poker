@@ -57,7 +57,7 @@ void printPlayers(const Player* players, const unsigned playerCount)
 	for (size_t i = 0; i < playerCount; i++)
 	{
 		printDeck(players[i].cards, 3);
-		std::cout << '\n';
+		std::cout << '\n' << calculatePlayerPoints(players[i].cards) << '\n' << '\n';
 	}
 }
 

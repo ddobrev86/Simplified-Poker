@@ -21,7 +21,13 @@ void orderTwoCardsInPlayerHand(Card& firstCard, Card& secondCard);
 
 void orderPlayerCards(Player& player);
 
-unsigned short countIdenticalCardTypes(Card* playerCards);
+bool isSevenOfClubs(const Card card);
 
-unsigned short calculatePlayerPoints();
+short sumCardValues(const Card* playerCards, size_t startIndex);
+
+short countIdenticalCardTypes(const Card* playerCards, size_t startIndex);
+
+short countIdenticalCardSuits(const Card* playerCards, size_t startIndex);
+
+unsigned short calculatePlayerPoints(const Card* playerCards);
 
