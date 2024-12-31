@@ -19,7 +19,7 @@ void enterPlayerCount(unsigned short& playerCount)
 {
 	do
 	{
-		std::cout << "Enter player count: ";
+		std::cout << '\n' << "Enter player count: ";
 		std::cin >> playerCount;
 		if (playerCount >= 2 && playerCount <= 9)
 			break;

@@ -44,11 +44,11 @@ const CardSuit SUITS[] = {
 
 Card* deck = fillDeckWithCards(CARD_TYPES, SUITS, TYPES_COUNT, SUITS_COUNT, CARDS_IN_DECK);
 
-void printDeck(const Card* deck, const unsigned cardsCount)
+void printDeck(const Card* deck, const unsigned cardsCount, const char separator)
 {
 	for (size_t i = 0; i < cardsCount; i++)
 	{
-		std::cout << deck[i].type->pip << deck[i].suit->name << std::endl;
+		std::cout << deck[i].type->pip << deck[i].suit->name << separator;
 	}
 }
 
@@ -56,16 +56,33 @@ void printPlayers(const Player* players, const unsigned playerCount)
 {
 	for (size_t i = 0; i < playerCount; i++)
 	{
-		printDeck(players[i].cards, 3);
+		printDeck(players[i].cards, 3, '\n');
 		std::cout << '\n' << calculatePlayerPoints(players[i].cards) << '\n' << '\n';
+	}
+}
+
+void showPlayerBalances(const Player* players, const unsigned playerCount)
+{
+	std::cout << '\n';
+
+	for (size_t current = 0; current < playerCount;)
+	{
+		for (int row = 0; row < 3; row++)
+		{
+			std::cout << "Player " << ++current << ": " << players[current - 1].chips << " ";
+		}
+
+		std::cout << '\n';
 	}
 }
 
 int main()
 {
 	char gameCommand;
+	char playerAnswer;
 	unsigned short playerCount = 0;
 	Player* players = nullptr;
+	int lastRaise = 0;
 
 	while (true)
 	{
@@ -83,9 +100,38 @@ int main()
 				for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
 				{
 					orderPlayerCards(players[playerIndx]);
+					players[playerIndx].points = calculatePlayerPoints(players[playerIndx].cards);
 				}
 
-				printPlayers(players, playerCount);
+				showPlayerBalances(players, playerCount);
+
+				for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
+				{
+					std::cout << '\n' << "Player " << playerIndx + 1 << "\n\n";
+					std::cout << "You have given: " << players[playerIndx].given << '\n';
+					std::cout << "Last raise is: " << lastRaise << "\n\n";
+
+					std::cout << "Do you want to see your cards and points?(y/n): ";
+
+					do
+					{
+						std::cin >> playerAnswer;
+
+						if (playerAnswer == 'y' || playerAnswer == 'n')
+							break;
+
+						std::cout << "Enter a valid option";
+					} while (true);
+
+					if (playerAnswer == 'y')
+					{
+						printDeck(players[playerIndx].cards, CARDS_PER_PLAYER, ' ');
+						std::cout << " " << players[playerIndx].points << '\n';
+					}
+
+					//std::cout << "Player " << playerIndx + 1 << " do you raise, call, or fold()"
+
+				}
 
 				break;
 			case '2':

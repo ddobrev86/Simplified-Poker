@@ -113,14 +113,14 @@ unsigned short calculatePlayerPoints(const Card* playerCards)
 	identicalTypes = countIdenticalCardTypes(playerCards, playerHasSevenOfClubs) + playerHasSevenOfClubs;
 	identicalSuits = countIdenticalCardSuits(playerCards, playerHasSevenOfClubs) + playerHasSevenOfClubs;
 
-	bool hasTwoSevens = (identicalTypes && playerCards[0].type->value == 7);
-	bool hasTwoAces = (identicalTypes && playerCards[CARDS_PER_PLAYER - 1].type->value == 11);
+	bool hasTwoSevens = (identicalTypes && playerCards[1].type->value == 7);
+	bool hasTwoAces = (playerCards[1].type->value == 11 && identicalTypes);
 
 	if (identicalTypes > 1 || identicalSuits > 1)
 	{
 		points = sumCardValues(playerCards, playerHasSevenOfClubs);
 	}
-	else if (hasTwoSevens)
+	else if (!playerHasSevenOfClubs && hasTwoSevens)
 	{
 		points = TWO_SEVENS_POINTS;
 	}

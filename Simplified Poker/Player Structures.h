@@ -17,12 +17,14 @@
 #include "Deck Structures.h"
 
 const unsigned short CARDS_PER_PLAYER = 3;
+const unsigned CHIP_VALUE = 10;
 
 struct Player
 {
 	bool isActive;
 	bool outOfChips = false;
-	//unsigned short orderInGame;
-	unsigned int chips;
+	unsigned short points;
+	unsigned chips = 100 * CHIP_VALUE;
+	unsigned given = 0;
 	Card cards[CARDS_PER_PLAYER]{};
 };
