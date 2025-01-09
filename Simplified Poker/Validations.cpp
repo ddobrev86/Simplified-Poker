@@ -14,6 +14,7 @@
 */
 
 #include <iostream>
+#include "Validations.h"
 
 void enterPlayerCount(unsigned short& playerCount)
 {
@@ -26,4 +27,28 @@ void enterPlayerCount(unsigned short& playerCount)
 
 		std::cout << "Player count must be between 2 and 9!" << std::endl;
 	} while (true);
+}
+
+void askPlayerAction(const Player player, const int lastRaise, 
+	const size_t playerIndx, char& playerAnswer)
+{
+	if (lastRaise < 0)
+	{
+		std::cout << "Invalid raise";
+		return;
+	}
+
+	bool canCall = (player.given < lastRaise);
+
+	do
+	{
+		if (canCall)
+			std::cout << "Player " << playerIndx + 1 << " do you raise, call, or fold(r/c/f): ";
+		else
+			std::cout << "Player " << playerIndx + 1 << " do you raise, or fold(r/f): ";
+
+		std::cin >> playerAnswer;
+
+	} while (playerAnswer != 'r' && playerAnswer != 'f' && (playerAnswer != 'c' && canCall));
+
 }

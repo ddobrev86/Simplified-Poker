@@ -67,7 +67,7 @@ void showPlayerBalances(const Player* players, const unsigned playerCount)
 
 	for (size_t current = 0; current < playerCount;)
 	{
-		for (int row = 0; row < 3; row++)
+		for (int row = 0; row < 2; row++)
 		{
 			std::cout << "Player " << ++current << ": " << players[current - 1].chips << " ";
 		}
@@ -129,7 +129,18 @@ int main()
 						std::cout << " " << players[playerIndx].points << '\n';
 					}
 
-					//std::cout << "Player " << playerIndx + 1 << " do you raise, call, or fold()"
+					askPlayerAction(players[playerIndx], lastRaise, playerIndx, playerAnswer);
+
+					switch (playerAnswer)
+					{
+						case 'r':
+							raise(players[playerIndx], players, playerCount, lastRaise);
+							break;
+						case 'c':
+							break;
+						case 'f':
+							break;
+					}
 
 				}
 

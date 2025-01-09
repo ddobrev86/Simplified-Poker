@@ -31,3 +31,8 @@ short countIdenticalCardSuits(const Card* playerCards, size_t startIndex);
 
 unsigned short calculatePlayerPoints(const Card* playerCards);
 
+unsigned calculateMinPlayerBalance(const Player* players, const unsigned short playerCount);
+
+void raise(const Player player, const Player* allPlayers,
+	const unsigned short playerCount, int& lastRaise);
+

@@ -138,3 +138,67 @@ unsigned short calculatePlayerPoints(const Card* playerCards)
 
 	return points;
 }
+
+unsigned calculateMinPlayerBalance(const Player* players, const unsigned short playerCount)
+{
+	if (!players)
+		return 0;
+
+	unsigned min = CHIP_VALUE * STARTING_CHIP_COUNT;
+
+	for (size_t indx = 0; indx < playerCount; indx++)
+	{
+		if (players[indx].isActive && players[indx].chips < min)
+		{
+			min = players[indx].chips;
+		}
+	}
+
+	return min;
+}
+
+void raise(Player player, const Player* allPlayers,
+	const unsigned short playerCount, int& lastRaise)
+{
+	if (!allPlayers)
+	{
+		return;
+	}
+
+	unsigned minBalance = calculateMinPlayerBalance(allPlayers, playerCount);
+
+	unsigned raise;
+	bool belowMin = false;
+	bool overLastRaise = false;
+
+	do
+	{
+		std::cout << std::endl << "Enter your raise: ";
+		std::cin >> raise;
+
+		if (raise > player.chips)
+		{
+			std::cout << "You don't have enough chips for this bet";
+			continue;
+		}
+
+		belowMin = (raise < minBalance);
+		overLastRaise = (lastRaise + CHIP_VALUE <= raise);
+
+		if (!belowMin)
+		{
+			std::cout << "Raise shouldn't exceed the min player balance(" << minBalance << ")" << std::endl;
+		}
+
+		if (!overLastRaise)
+		{
+			std::cout << "Raise should be at least " << lastRaise + CHIP_VALUE << std::endl;
+		}
+
+	} while (!(belowMin && overLastRaise));
+
+	player.chips -= raise;
+	player.given += raise;
+
+	lastRaise = raise;
+}

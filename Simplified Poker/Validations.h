@@ -14,4 +14,9 @@
 *
 */
 
+#include "Player Structures.h"
+
 void enterPlayerCount(unsigned short& playerCount);
+
+void askPlayerAction(const Player player, const int lastRaise,
+	const size_t playerIndx, char& playerAnswer);

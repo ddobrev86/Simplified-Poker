@@ -18,13 +18,14 @@
 
 const unsigned short CARDS_PER_PLAYER = 3;
 const unsigned CHIP_VALUE = 10;
+const unsigned STARTING_CHIP_COUNT = 100;
 
 struct Player
 {
 	bool isActive;
 	bool outOfChips = false;
 	unsigned short points;
-	unsigned chips = 100 * CHIP_VALUE;
+	unsigned chips = STARTING_CHIP_COUNT * CHIP_VALUE;
 	unsigned given = 0;
 	Card cards[CARDS_PER_PLAYER]{};
 };
