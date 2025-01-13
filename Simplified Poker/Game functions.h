@@ -38,3 +38,5 @@ void raise(Player& player, const Player* allPlayers,
 
 void call(Player& player, unsigned& lastRaise, unsigned& pot);
 
+void fold(Player& player);
+

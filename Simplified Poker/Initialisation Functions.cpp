@@ -27,6 +27,43 @@ void printGameCommands()
 		<< "Choose an option: ";
 }
 
+void printDeck(const Card* deck, const unsigned cardsCount, const char separator)
+{
+	for (size_t i = 0; i < cardsCount; i++)
+	{
+		std::cout << deck[i].type->pip << deck[i].suit->name << separator;
+	}
+}
+
+void printPlayers(const Player* players, const unsigned playerCount)
+{
+	for (size_t i = 0; i < playerCount; i++)
+	{
+		printDeck(players[i].cards, 3, '\n');
+		std::cout << '\n' << calculatePlayerPoints(players[i].cards) << '\n' << '\n';
+	}
+}
+
+void showPlayerBalances(const Player* players, const unsigned playerCount)
+{
+	std::cout << '\n';
+
+	size_t toBePrinted = playerCount;
+	const int PLAYERS_PER_ROW = 3;
+
+	for (size_t current = 0; current < playerCount;)
+	{
+		for (size_t row = 0; row < PLAYERS_PER_ROW && row < toBePrinted; row++)
+		{
+			std::cout << "Player " << ++current << ": " << players[current - 1].chips << " ";
+		}
+
+		toBePrinted -= PLAYERS_PER_ROW;
+
+		std::cout << '\n';
+	}
+}
+
 Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites, 
 	const unsigned typesCount, const unsigned suitsCount, const unsigned cardsCount)
 {

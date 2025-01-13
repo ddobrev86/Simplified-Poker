@@ -16,8 +16,15 @@
 #pragma once
 #include "Deck Structures.h"
 #include "Player Structures.h"
+#include "Game functions.h"
 
 void printGameCommands();
+
+void printDeck(const Card* deck, const unsigned cardsCount, const char separator);
+
+void printPlayers(const Player* players, const unsigned playerCount);
+
+void showPlayerBalances(const Player* players, const unsigned playerCount);
 
 Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites,
 	const unsigned typesCount, const unsigned suitsCount, const unsigned cardsCount);

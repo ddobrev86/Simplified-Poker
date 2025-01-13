@@ -217,3 +217,8 @@ void call(Player& player, unsigned& lastRaise, unsigned& pot)
 	pot += toGive;
 
 }
+
+void fold(Player& player)
+{
+	player.isActive = false;
+}

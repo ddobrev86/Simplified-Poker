@@ -52,3 +52,23 @@ void askPlayerAction(const Player player, const unsigned lastRaise,
 	} while (playerAnswer != 'r' && playerAnswer != 'f' && (playerAnswer != 'c' && canCall));
 
 }
+
+void askPlayerToPrintDeck(Player player, char& playerAnswer)
+{
+	do
+	{
+		std::cin >> playerAnswer;
+
+		if (playerAnswer == 'n')
+			return;
+
+		if (playerAnswer == 'y')
+			break;
+
+		std::cout << "Enter a valid option";
+	} while (true);
+
+	printDeck(player.cards, CARDS_PER_PLAYER, ' ');
+	std::cout << " " << player.points << '\n';
+		
+}
