@@ -157,8 +157,8 @@ unsigned calculateMinPlayerBalance(const Player* players, const unsigned short p
 	return min;
 }
 
-void raise(Player player, const Player* allPlayers,
-	const unsigned short playerCount, int& lastRaise)
+void raise(Player& player, const Player* allPlayers,
+	const unsigned short playerCount, unsigned& lastRaise, unsigned& pot)
 {
 	if (!allPlayers)
 	{
@@ -197,8 +197,23 @@ void raise(Player player, const Player* allPlayers,
 
 	} while (!(belowMin && overLastRaise));
 
-	player.chips -= raise;
-	player.given += raise;
+	unsigned toGive = raise - player.given;
+
+	player.chips -= toGive;
+	player.given += toGive;
+
+	pot += toGive;
 
 	lastRaise = raise;
+}
+
+void call(Player& player, unsigned& lastRaise, unsigned& pot)
+{
+	unsigned toGive = lastRaise - player.given;
+
+	player.chips -= toGive;
+	player.given += toGive;
+
+	pot += toGive;
+
 }

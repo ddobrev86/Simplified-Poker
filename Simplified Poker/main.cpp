@@ -65,12 +65,17 @@ void showPlayerBalances(const Player* players, const unsigned playerCount)
 {
 	std::cout << '\n';
 
+	size_t toBePrinted = playerCount;
+	const int PLAYERS_PER_ROW = 3;
+
 	for (size_t current = 0; current < playerCount;)
 	{
-		for (int row = 0; row < 2; row++)
+		for (size_t row = 0; row < PLAYERS_PER_ROW && row < toBePrinted; row++)
 		{
 			std::cout << "Player " << ++current << ": " << players[current - 1].chips << " ";
 		}
+
+		toBePrinted -= PLAYERS_PER_ROW;
 
 		std::cout << '\n';
 	}
@@ -82,7 +87,13 @@ int main()
 	char playerAnswer;
 	unsigned short playerCount = 0;
 	Player* players = nullptr;
-	int lastRaise = 0;
+
+	unsigned lastRaise = 0;
+	unsigned pot = 0;
+
+	size_t lastPlayerToRaise = 0;
+	size_t currentPlayer = 0;
+
 
 	while (true)
 	{
@@ -101,11 +112,64 @@ int main()
 				{
 					orderPlayerCards(players[playerIndx]);
 					players[playerIndx].points = calculatePlayerPoints(players[playerIndx].cards);
+
+					players[playerIndx].chips -= CHIP_VALUE;
+					//players[playerIndx].given += CHIP_VALUE;
+					pot += CHIP_VALUE;
 				}
 
 				showPlayerBalances(players, playerCount);
 
-				for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
+				do
+				{
+					//компилаторът прави проблем за players[currentPlayer]
+					if (currentPlayer >= playerCount)
+						break;
+
+					std::cout << '\n' << "Player " << currentPlayer + 1 << "\n\n";
+					std::cout << "You have given: " << players[currentPlayer].given << '\n';
+					std::cout << "Last raise is: " << lastRaise << "\n\n";
+
+					std::cout << "Do you want to see your cards and points?(y/n): ";
+
+					do
+					{
+						std::cin >> playerAnswer;
+
+						if (playerAnswer == 'y' || playerAnswer == 'n')
+							break;
+
+						std::cout << "Enter a valid option";
+					} while (true);
+
+					if (playerAnswer == 'y')
+					{
+						printDeck(players[currentPlayer].cards, CARDS_PER_PLAYER, ' ');
+						std::cout << " " << players[currentPlayer].points << '\n';
+					}
+
+					askPlayerAction(players[currentPlayer], lastRaise, currentPlayer, playerAnswer);
+
+					switch (playerAnswer)
+					{
+					case 'r':
+						raise(players[currentPlayer], players, playerCount, lastRaise, pot);
+						lastPlayerToRaise = currentPlayer;
+						break;
+					case 'c':
+						call(players[currentPlayer], lastRaise, pot);
+						break;
+					case 'f':
+						break;
+					}
+
+					currentPlayer++;
+					currentPlayer %= playerCount;
+
+				} while (lastPlayerToRaise != currentPlayer);
+				
+
+				/*for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
 				{
 					std::cout << '\n' << "Player " << playerIndx + 1 << "\n\n";
 					std::cout << "You have given: " << players[playerIndx].given << '\n';
@@ -142,7 +206,7 @@ int main()
 							break;
 					}
 
-				}
+				}*/
 
 				break;
 			case '2':
@@ -150,7 +214,7 @@ int main()
 			case '3':
 				break;
 			default:
-				std::cout << "Please choose a correct game option";
+				std::cout << '\n' << "Please choose a correct game option" << '\n';
 				continue;
 		}
 

@@ -18,5 +18,5 @@
 
 void enterPlayerCount(unsigned short& playerCount);
 
-void askPlayerAction(const Player player, const int lastRaise,
+void askPlayerAction(const Player player, const unsigned lastRaise,
 	const size_t playerIndx, char& playerAnswer);

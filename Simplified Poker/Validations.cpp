@@ -29,7 +29,7 @@ void enterPlayerCount(unsigned short& playerCount)
 	} while (true);
 }
 
-void askPlayerAction(const Player player, const int lastRaise, 
+void askPlayerAction(const Player player, const unsigned lastRaise, 
 	const size_t playerIndx, char& playerAnswer)
 {
 	if (lastRaise < 0)

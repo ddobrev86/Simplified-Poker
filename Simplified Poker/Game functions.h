@@ -33,6 +33,8 @@ unsigned short calculatePlayerPoints(const Card* playerCards);
 
 unsigned calculateMinPlayerBalance(const Player* players, const unsigned short playerCount);
 
-void raise(const Player player, const Player* allPlayers,
-	const unsigned short playerCount, int& lastRaise);
+void raise(Player& player, const Player* allPlayers,
+	const unsigned short playerCount, unsigned& lastRaise, unsigned& pot);
+
+void call(Player& player, unsigned& lastRaise, unsigned& pot);
 
