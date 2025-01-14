@@ -113,14 +113,15 @@ unsigned short calculatePlayerPoints(const Card* playerCards)
 	identicalTypes = countIdenticalCardTypes(playerCards, playerHasSevenOfClubs) + playerHasSevenOfClubs;
 	identicalSuits = countIdenticalCardSuits(playerCards, playerHasSevenOfClubs) + playerHasSevenOfClubs;
 
-	bool hasTwoSevens = (identicalTypes && playerCards[1].type->value == 7);
+	bool hasTwoSevens = (identicalTypes && playerCards[1].type->value == 7 
+		&& playerCards[0].suit->value != 1);
 	bool hasTwoAces = (playerCards[1].type->value == 11 && identicalTypes);
 
 	if (identicalTypes > 1 || identicalSuits > 1)
 	{
 		points = sumCardValues(playerCards, playerHasSevenOfClubs);
 	}
-	else if (!playerHasSevenOfClubs && hasTwoSevens)
+	else if (hasTwoSevens)
 	{
 		points = TWO_SEVENS_POINTS;
 	}
@@ -133,7 +134,7 @@ unsigned short calculatePlayerPoints(const Card* playerCards)
 		points = playerCards[CARDS_PER_PLAYER - 1].type->value;
 	}
 
-	if (playerHasSevenOfClubs && !hasTwoSevens)
+	if (playerHasSevenOfClubs)
 		points += SEVEN_OF_CLUBS_POINTS;
 
 	return points;
@@ -221,4 +222,48 @@ void call(Player& player, unsigned& lastRaise, unsigned& pot)
 void fold(Player& player)
 {
 	player.isActive = false;
+}
+
+unsigned getMaxPoints(const Player* players, const size_t playerCount)
+{
+	if (!players)
+	{
+		return 0;
+	}
+
+	unsigned maxPoints = players[0].points;
+
+	for (size_t indx = 1; indx < playerCount; indx++)
+	{
+		if (players[indx].isActive && players[indx].points > maxPoints)
+		{
+			maxPoints = players[indx].points;
+		}
+	}
+
+	return maxPoints;
+}
+
+void getWinners(Player* players, const size_t playerCount, const unsigned maxPoints,
+	unsigned& winnerCount)
+{
+	if (!players)
+	{
+		return;
+	}
+
+	for (size_t indx = 0; indx < playerCount; indx++)
+	{
+		if (players[indx].isActive)
+		{
+			if (players[indx].points == maxPoints)
+			{
+				winnerCount++;
+			}
+			else
+			{
+				players[indx].isActive = false;
+			}
+		}
+	}
 }

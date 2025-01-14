@@ -22,9 +22,11 @@ void printGameCommands();
 
 void printDeck(const Card* deck, const unsigned cardsCount, const char separator);
 
-void printPlayers(const Player* players, const unsigned playerCount);
+void printPlayers(const Player* players, const unsigned short playerCount);
 
-void showPlayerBalances(const Player* players, const unsigned playerCount);
+void showPlayerBalances(const Player* players, const unsigned short playerCount);
+
+void printWinners(const Player* players, const unsigned short playerCount);
 
 Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites,
 	const unsigned typesCount, const unsigned suitsCount, const unsigned cardsCount);

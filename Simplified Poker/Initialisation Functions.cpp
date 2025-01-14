@@ -35,7 +35,7 @@ void printDeck(const Card* deck, const unsigned cardsCount, const char separator
 	}
 }
 
-void printPlayers(const Player* players, const unsigned playerCount)
+void printPlayers(const Player* players, const unsigned short playerCount)
 {
 	for (size_t i = 0; i < playerCount; i++)
 	{
@@ -44,7 +44,7 @@ void printPlayers(const Player* players, const unsigned playerCount)
 	}
 }
 
-void showPlayerBalances(const Player* players, const unsigned playerCount)
+void showPlayerBalances(const Player* players, const unsigned short playerCount)
 {
 	std::cout << '\n';
 
@@ -62,6 +62,24 @@ void showPlayerBalances(const Player* players, const unsigned playerCount)
 
 		std::cout << '\n';
 	}
+}
+
+void printWinners(const Player* players, const unsigned short playerCount)
+{
+	if (!players)
+	{
+		return;
+	}
+
+	for (size_t indx = 0; indx < playerCount; indx++)
+	{
+		if (players[indx].isActive)
+		{
+			std::cout << "Player " << indx + 1 << "\t";
+		}
+	}
+
+	std::cout << std::endl;
 }
 
 Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites, 
@@ -129,6 +147,9 @@ void dealCardsToPlayers(const unsigned short playerCount, const unsigned short c
 	{
 		for (size_t currentPlayer = 0; currentPlayer < playerCount; currentPlayer++)
 		{
+			if (!players[currentPlayer].isActive)
+				continue;
+
 			players[currentPlayer].cards[currentCard] = *deck;
 			deck++;
 		}

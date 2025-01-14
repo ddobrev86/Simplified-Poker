@@ -40,3 +40,8 @@ void call(Player& player, unsigned& lastRaise, unsigned& pot);
 
 void fold(Player& player);
 
+unsigned getMaxPoints(const Player* players, const size_t playerCount);
+
+void getWinners(Player* players, const size_t playerCount, const unsigned maxPoints,
+	unsigned& winnerCount);
+

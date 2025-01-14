@@ -57,6 +57,8 @@ int main()
 	size_t lastPlayerToRaise = 0;
 	size_t currentPlayer = 0;
 
+	unsigned winnerCount = 0;
+	unsigned maxPoints;
 
 	while (true)
 	{
@@ -89,7 +91,14 @@ int main()
 					if (currentPlayer >= playerCount)
 						break;
 
-					std::cout << '\n' << "Player " << currentPlayer + 1 << "\n\n";
+					if (!players[currentPlayer].isActive)
+					{
+						currentPlayer++;
+						continue;
+					}
+
+					std::cout << '\n' << "Pot: " << pot << '\n';
+					std::cout << '\n' << "Player " << currentPlayer + 1 << "\n";
 					std::cout << "You have given: " << players[currentPlayer].given << '\n';
 					std::cout << "Last raise is: " << lastRaise << "\n\n";
 
@@ -109,6 +118,7 @@ int main()
 						call(players[currentPlayer], lastRaise, pot);
 						break;
 					case 'f':
+						fold(players[currentPlayer]);
 						break;
 					}
 
@@ -117,7 +127,20 @@ int main()
 
 				} while (lastPlayerToRaise != currentPlayer);
 				
+				winnerCount = 0;
+				maxPoints = getMaxPoints(players, playerCount);
+				getWinners(players, playerCount, maxPoints, winnerCount);
 
+				if (winnerCount > 1)
+				{
+					std::cout << '\n' << "IT'S A TIE!" << '\n';
+				}
+				else
+				{
+					std::cout << '\n' << "Winner is: ";
+				}
+
+				printWinners(players, playerCount);
 				/*for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
 				{
 					std::cout << '\n' << "Player " << playerIndx + 1 << "\n\n";
