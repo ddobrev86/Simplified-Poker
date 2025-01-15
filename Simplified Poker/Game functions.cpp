@@ -45,7 +45,7 @@ short sumCardValues(const Card* playerCards, size_t startIndex)
 		sum += playerCards[indx].type->value;
 	}
 
-	return (sum == 21 ? THREE_SEVENS_POINTS : sum);
+	return (sum == 21 || sum == 14 ? THREE_SEVENS_POINTS : sum);
 }
 
 short countIdenticalCardTypes(const Card* playerCards, size_t startIndex)
@@ -113,8 +113,7 @@ unsigned short calculatePlayerPoints(const Card* playerCards)
 	identicalTypes = countIdenticalCardTypes(playerCards, playerHasSevenOfClubs) + playerHasSevenOfClubs;
 	identicalSuits = countIdenticalCardSuits(playerCards, playerHasSevenOfClubs) + playerHasSevenOfClubs;
 
-	bool hasTwoSevens = (identicalTypes && playerCards[1].type->value == 7 
-		&& playerCards[0].suit->value != 1);
+	bool hasTwoSevens = (identicalTypes && playerCards[1].type->value == 7);
 	bool hasTwoAces = (playerCards[1].type->value == 11 && identicalTypes);
 
 	if (identicalTypes > 1 || identicalSuits > 1)
@@ -134,7 +133,7 @@ unsigned short calculatePlayerPoints(const Card* playerCards)
 		points = playerCards[CARDS_PER_PLAYER - 1].type->value;
 	}
 
-	if (playerHasSevenOfClubs)
+	if (playerHasSevenOfClubs && !hasTwoSevens)
 		points += SEVEN_OF_CLUBS_POINTS;
 
 	return points;
