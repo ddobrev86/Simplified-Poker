@@ -23,3 +23,5 @@ void askPlayerAction(const Player player, const unsigned lastRaise,
 	const size_t playerIndx, char& playerAnswer);
 
 void askPlayerToPrintDeck(Player player, char& playerAnswer);
+
+void playAgain(char& answer);

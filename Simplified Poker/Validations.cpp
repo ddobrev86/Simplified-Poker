@@ -72,3 +72,16 @@ void askPlayerToPrintDeck(Player player, char& playerAnswer)
 	std::cout << " " << player.points << '\n';
 		
 }
+
+void playAgain(char& answer)
+{
+	do
+	{
+		std::cin >> answer;
+
+		if (answer == 'n' || answer == 'y')
+			return;
+
+		std::cout << "Enter a valid option";
+	} while (true);
+}

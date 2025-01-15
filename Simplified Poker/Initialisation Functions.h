@@ -37,3 +37,6 @@ void shuffleDeck(const unsigned cardsInDeck, Card* deck);
 
 void dealCardsToPlayers(const unsigned short playerCount, const unsigned short cardsPerPlayer, 
 	Card* deck, Player* players);
+
+void resetPlayerStates(Player*& players, const unsigned short playerCount,
+	unsigned short& inGame);

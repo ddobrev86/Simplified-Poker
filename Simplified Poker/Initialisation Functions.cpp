@@ -155,3 +155,22 @@ void dealCardsToPlayers(const unsigned short playerCount, const unsigned short c
 		}
 	}
 }
+
+void resetPlayerStates(Player*& players, const unsigned short playerCount,
+	unsigned short& inGame)
+{
+	if (!players)
+	{
+		return;
+	}
+
+	for (size_t indx = 0; indx < playerCount; indx++)
+	{
+		if (players[indx].chips > 0)
+		{
+			players[indx].isActive = true;
+			players[indx].given = 0;
+			inGame++;
+		}
+	}
+}

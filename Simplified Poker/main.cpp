@@ -56,6 +56,7 @@ int main()
 
 	size_t lastPlayerToRaise = 0;
 	size_t currentPlayer = 0;
+	unsigned short inGame = playerCount;
 
 	unsigned winnerCount = 0;
 	unsigned maxPoints;
@@ -70,115 +71,94 @@ int main()
 				enterPlayerCount(playerCount);
 				players = new Player[playerCount];
 
-				shuffleDeck(CARDS_IN_DECK, deck);
-				dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
-
-				for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
-				{
-					orderPlayerCards(players[playerIndx]);
-					players[playerIndx].points = calculatePlayerPoints(players[playerIndx].cards);
-
-					players[playerIndx].chips -= CHIP_VALUE;
-					//players[playerIndx].given += CHIP_VALUE;
-					pot += CHIP_VALUE;
-				}
-
-				showPlayerBalances(players, playerCount);
-
 				do
 				{
-					//компилаторът прави проблем за players[currentPlayer]
-					if (currentPlayer >= playerCount)
-						break;
+					shuffleDeck(CARDS_IN_DECK, deck);
+					dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
 
-					if (!players[currentPlayer].isActive)
+					for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
 					{
-						currentPlayer++;
-						continue;
+						orderPlayerCards(players[playerIndx]);
+						players[playerIndx].points = calculatePlayerPoints(players[playerIndx].cards);
+
+						players[playerIndx].chips -= CHIP_VALUE;
+						//players[playerIndx].given += CHIP_VALUE;
+						pot += CHIP_VALUE;
 					}
 
-					std::cout << '\n' << "Pot: " << pot << '\n';
-					std::cout << '\n' << "Player " << currentPlayer + 1 << "\n";
-					std::cout << "You have given: " << players[currentPlayer].given << '\n';
-					std::cout << "Last raise is: " << lastRaise << "\n\n";
-
-					std::cout << "Do you want to see your cards and points?(y/n): ";
-
-					askPlayerToPrintDeck(players[currentPlayer], playerAnswer);
-
-					askPlayerAction(players[currentPlayer], lastRaise, currentPlayer, playerAnswer);
-
-					switch (playerAnswer)
-					{
-					case 'r':
-						raise(players[currentPlayer], players, playerCount, lastRaise, pot);
-						lastPlayerToRaise = currentPlayer;
-						break;
-					case 'c':
-						call(players[currentPlayer], lastRaise, pot);
-						break;
-					case 'f':
-						fold(players[currentPlayer]);
-						break;
-					}
-
-					currentPlayer++;
-					currentPlayer %= playerCount;
-
-				} while (lastPlayerToRaise != currentPlayer);
-				
-				winnerCount = 0;
-				maxPoints = getMaxPoints(players, playerCount);
-				getWinners(players, playerCount, maxPoints, winnerCount);
-
-				if (winnerCount > 1)
-				{
-					std::cout << '\n' << "IT'S A TIE!" << '\n';
-				}
-				else
-				{
-					std::cout << '\n' << "Winner is: ";
-				}
-
-				printWinners(players, playerCount);
-				/*for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
-				{
-					std::cout << '\n' << "Player " << playerIndx + 1 << "\n\n";
-					std::cout << "You have given: " << players[playerIndx].given << '\n';
-					std::cout << "Last raise is: " << lastRaise << "\n\n";
-
-					std::cout << "Do you want to see your cards and points?(y/n): ";
+					showPlayerBalances(players, playerCount);
 
 					do
 					{
-						std::cin >> playerAnswer;
-
-						if (playerAnswer == 'y' || playerAnswer == 'n')
+						//compiler throws a warning for players[currentPlayer]
+						if (currentPlayer >= playerCount)
 							break;
 
-						std::cout << "Enter a valid option";
-					} while (true);
+						if (!players[currentPlayer].isActive)
+						{
+							currentPlayer++;
+							continue;
+						}
 
-					if (playerAnswer == 'y')
-					{
-						printDeck(players[playerIndx].cards, CARDS_PER_PLAYER, ' ');
-						std::cout << " " << players[playerIndx].points << '\n';
-					}
+						std::cout << '\n' << "Pot: " << pot << '\n';
+						std::cout << '\n' << "Player " << currentPlayer + 1 << "\n";
+						std::cout << "You have given: " << players[currentPlayer].given << '\n';
+						std::cout << "Last raise is: " << lastRaise << "\n\n";
 
-					askPlayerAction(players[playerIndx], lastRaise, playerIndx, playerAnswer);
+						std::cout << "Do you want to see your cards and points?(y/n): ";
 
-					switch (playerAnswer)
-					{
+						askPlayerToPrintDeck(players[currentPlayer], playerAnswer);
+
+						askPlayerAction(players[currentPlayer], lastRaise, currentPlayer, playerAnswer);
+
+						switch (playerAnswer)
+						{
 						case 'r':
-							raise(players[playerIndx], players, playerCount, lastRaise);
+							raise(players[currentPlayer], players, playerCount, lastRaise, pot);
+							lastPlayerToRaise = currentPlayer;
 							break;
 						case 'c':
+							call(players[currentPlayer], lastRaise, pot);
 							break;
 						case 'f':
+							fold(players[currentPlayer]);
+							inGame -= 1;
 							break;
+						}
+
+						if (inGame == 1)
+						{
+							break;
+						}
+
+						currentPlayer++;
+						currentPlayer %= playerCount;
+
+					} while (lastPlayerToRaise != currentPlayer);
+
+					winnerCount = 0;
+					maxPoints = getMaxPoints(players, playerCount);
+					getWinners(players, playerCount, maxPoints, winnerCount);
+
+					std::cout << ((winnerCount > 1) ? ("\nIT'S A TIE!\n") : ("\nWinner is : "));
+					printWinners(players, playerCount);
+
+
+					std::cout << '\n' << "Do you want to play again?(y/n): ";
+					playAgain(playerAnswer);
+
+					if (playerAnswer == 'n')
+					{
+						break;
+					}
+					else
+					{
+						inGame = 0;
+						resetPlayerStates(players, playerCount, inGame);
 					}
 
-				}*/
+				} while (true);
+				
 
 				break;
 			case '2':
