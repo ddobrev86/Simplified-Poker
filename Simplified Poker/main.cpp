@@ -19,6 +19,7 @@
 #include "Player Structures.h"
 #include "Validations.h"
 #include "Game functions.h"
+#include <stdlib.h>
 
 const unsigned TYPES_COUNT = 8;
 const unsigned SUITS_COUNT = 4;
@@ -93,6 +94,7 @@ int main()
 							currentPlayer %= playerCount;
 							continue;
 						}
+						system("cls");
 
 						showPlayerBalances(players, playerCount);
 						printPlayerInfo(players, currentPlayer, pot, lastRaise);
