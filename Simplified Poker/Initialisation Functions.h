@@ -9,7 +9,7 @@
 * @idnumber 3MI0600520
 * @compiler VC
 *
-* <header file for helper functions that initialise the game>
+* <header file for helper functions that initialise the game or print information>
 *
 */
 
@@ -17,12 +17,16 @@
 #include "Deck Structures.h"
 #include "Player Structures.h"
 #include "Game functions.h"
+#include "Validations.h"
 
 void printGameCommands();
 
 void printDeck(const Card* deck, const unsigned cardsCount, const char separator);
 
 void printPlayers(const Player* players, const unsigned short playerCount);
+
+void printPlayerInfo(const Player* players, const size_t currentPlayer,
+	const unsigned pot, const unsigned lastRaise);
 
 void showPlayerBalances(const Player* players, const unsigned short playerCount);
 
@@ -38,5 +42,10 @@ void shuffleDeck(const unsigned cardsInDeck, Card* deck);
 void dealCardsToPlayers(const unsigned short playerCount, const unsigned short cardsPerPlayer, 
 	Card* deck, Player* players);
 
+void finalisePlayerDecks(Player* players, const size_t playerCount, unsigned& pot);
+
 void resetPlayerStates(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame);
+
+void readyPlayersForTie(Player*& players, const unsigned short playerCount,
+	unsigned short& inGame, const unsigned pot);

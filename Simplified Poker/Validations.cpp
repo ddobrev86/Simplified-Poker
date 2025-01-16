@@ -34,7 +34,7 @@ void askPlayerAction(const Player player, const unsigned lastRaise,
 {
 	if (lastRaise < 0)
 	{
-		std::cout << "Invalid raise";
+		std::cout << "Invalid input";
 		return;
 	}
 
@@ -55,6 +55,8 @@ void askPlayerAction(const Player player, const unsigned lastRaise,
 
 void askPlayerToPrintDeck(Player player, char& playerAnswer)
 {
+	std::cout << "Do you want to see your cards and points?(y/n): ";
+
 	do
 	{
 		std::cin >> playerAnswer;
@@ -83,5 +85,34 @@ void playAgain(char& answer)
 			return;
 
 		std::cout << "Enter a valid option";
+	} while (true);
+}
+
+void askPlayerToJoinTie(Player player, const size_t indx, 
+	const unsigned pot, unsigned short& inGame)
+{
+	char playerAnswer;
+
+	do 
+	{
+		std::cout << "Player " << indx + 1 << " do you want to join the TIE? "
+			"You have to pay " << pot << " (y/n): ";
+
+		std::cin >> playerAnswer;
+
+		if (playerAnswer == 'y')
+		{
+			player.chips -= pot;
+			player.isActive = true;
+			inGame++;
+			break;
+		}
+		else if (playerAnswer == 'n')
+		{
+			break;
+		}
+
+		std::cout << "Enter valid input\n";
+
 	} while (true);
 }

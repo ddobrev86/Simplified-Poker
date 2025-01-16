@@ -178,7 +178,7 @@ void raise(Player& player, const Player* allPlayers,
 
 		if (raise > player.chips)
 		{
-			std::cout << "You don't have enough chips for this bet";
+			std::cout << "You don't have enough chips for this bet\n";
 			continue;
 		}
 
@@ -223,6 +223,26 @@ void fold(Player& player)
 	player.isActive = false;
 }
 
+void playPlayerAction(Player* players, const size_t currentPlayer, 
+	const size_t playerCount, const char playerAnswer, unsigned lastRaise, 
+	unsigned pot, unsigned short inGame, size_t lastPlayerToRaise)
+{
+	switch (playerAnswer)
+	{
+	case 'r':
+		raise(players[currentPlayer], players, playerCount, lastRaise, pot);
+		lastPlayerToRaise = currentPlayer;
+		break;
+	case 'c':
+		call(players[currentPlayer], lastRaise, pot);
+		break;
+	case 'f':
+		fold(players[currentPlayer]);
+		inGame -= 1;
+		break;
+	}
+}
+
 unsigned getMaxPoints(const Player* players, const size_t playerCount)
 {
 	if (!players)
@@ -244,7 +264,7 @@ unsigned getMaxPoints(const Player* players, const size_t playerCount)
 }
 
 void getWinners(Player* players, const size_t playerCount, const unsigned maxPoints,
-	unsigned& winnerCount)
+	unsigned& winnerCount, size_t& winnerIndx)
 {
 	if (!players)
 	{
@@ -258,6 +278,7 @@ void getWinners(Player* players, const size_t playerCount, const unsigned maxPoi
 			if (players[indx].points == maxPoints)
 			{
 				winnerCount++;
+				winnerIndx = indx;
 			}
 			else
 			{

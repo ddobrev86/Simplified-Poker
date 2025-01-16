@@ -10,7 +10,7 @@
 * @idnumber 3MI0600520
 * @compiler VC
 *
-* <header file for helper functions that are used during the game>
+* <header file for helper functions that are used to execute game mechanics>
 *
 */
 
@@ -40,8 +40,12 @@ void call(Player& player, unsigned& lastRaise, unsigned& pot);
 
 void fold(Player& player);
 
+void playPlayerAction(Player* players, const size_t currentPlayer,
+	const size_t playerCount, const char playerAnswer, unsigned lastRaise,
+	unsigned pot, unsigned short inGame, size_t lastPlayerToRaise);
+
 unsigned getMaxPoints(const Player* players, const size_t playerCount);
 
 void getWinners(Player* players, const size_t playerCount, const unsigned maxPoints,
-	unsigned& winnerCount);
+	unsigned& winnerCount, size_t& winnerIndx);
 

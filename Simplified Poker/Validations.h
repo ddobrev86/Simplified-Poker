@@ -25,3 +25,6 @@ void askPlayerAction(const Player player, const unsigned lastRaise,
 void askPlayerToPrintDeck(Player player, char& playerAnswer);
 
 void playAgain(char& answer);
+
+void askPlayerToJoinTie(Player player, const size_t indx, 
+	const unsigned pot, unsigned short& inGame);

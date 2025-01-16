@@ -9,15 +9,18 @@
 * @idnumber 3MI0600520
 * @compiler VC
 *
-* <file with definitions for helper functions that initialise the game>
+* <file with definitions for helper functions that initialise the game or print information>
 *
 */
 
 #include "Initialisation Functions.h"
 #include <iostream>
-#include <cstdlib>
+//#include <cstdlib>
+#include <stdlib.h>
 #include <ctime>
 //#include <algorithm>
+
+const unsigned TIE_COMPENSATION = 5 * CHIP_VALUE;
 
 void printGameCommands()
 {
@@ -42,6 +45,22 @@ void printPlayers(const Player* players, const unsigned short playerCount)
 		printDeck(players[i].cards, 3, '\n');
 		std::cout << '\n' << calculatePlayerPoints(players[i].cards) << '\n' << '\n';
 	}
+}
+
+void printPlayerInfo(const Player* players, const size_t currentPlayer,
+	const unsigned pot, const unsigned lastRaise)
+{
+	if (!players)
+	{
+		return;
+	}
+
+	std::cout << '\n' << "Pot: " << pot << '\n';
+	std::cout << '\n' << "Player " << currentPlayer + 1 << "\n";
+	std::cout << "You have given: " << players[currentPlayer].given << '\n';
+	std::cout << "Last raise is: " << lastRaise << '\n';
+	std::cout << "Minimum raise: " << lastRaise + CHIP_VALUE << "\n\n";
+
 }
 
 void showPlayerBalances(const Player* players, const unsigned short playerCount)
@@ -156,6 +175,19 @@ void dealCardsToPlayers(const unsigned short playerCount, const unsigned short c
 	}
 }
 
+void finalisePlayerDecks(Player* players, const size_t playerCount, unsigned& pot)
+{
+	for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
+	{
+		orderPlayerCards(players[playerIndx]);
+		players[playerIndx].points = calculatePlayerPoints(players[playerIndx].cards);
+
+		players[playerIndx].chips -= CHIP_VALUE;
+		//players[playerIndx].given += CHIP_VALUE;
+		pot += CHIP_VALUE;
+	}
+}
+
 void resetPlayerStates(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame)
 {
@@ -171,6 +203,30 @@ void resetPlayerStates(Player*& players, const unsigned short playerCount,
 			players[indx].isActive = true;
 			players[indx].given = 0;
 			inGame++;
+		}
+	}
+}
+
+void readyPlayersForTie(Player*& players, const unsigned short playerCount,
+	unsigned short& inGame, const unsigned pot)
+{
+	if (!players)
+	{
+		return;
+	}
+
+	for (size_t indx = 0; indx < playerCount; indx++)
+	{
+		if (players[indx].isActive)
+		{
+			if (players[indx].chips == 0)
+			{
+				players[indx].chips += TIE_COMPENSATION;
+			}
+		}
+		else
+		{
+			askPlayerToJoinTie(players[indx], indx, pot, inGame);
 		}
 	}
 }

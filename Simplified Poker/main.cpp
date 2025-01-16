@@ -61,6 +61,8 @@ int main()
 	unsigned winnerCount = 0;
 	unsigned maxPoints;
 
+	size_t winnerIndx;
+
 	while (true)
 	{
 		printGameCommands();
@@ -76,15 +78,7 @@ int main()
 					shuffleDeck(CARDS_IN_DECK, deck);
 					dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
 
-					for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
-					{
-						orderPlayerCards(players[playerIndx]);
-						players[playerIndx].points = calculatePlayerPoints(players[playerIndx].cards);
-
-						players[playerIndx].chips -= CHIP_VALUE;
-						//players[playerIndx].given += CHIP_VALUE;
-						pot += CHIP_VALUE;
-					}
+					finalisePlayerDecks(players, playerCount, pot);
 
 					showPlayerBalances(players, playerCount);
 
@@ -100,31 +94,12 @@ int main()
 							continue;
 						}
 
-						std::cout << '\n' << "Pot: " << pot << '\n';
-						std::cout << '\n' << "Player " << currentPlayer + 1 << "\n";
-						std::cout << "You have given: " << players[currentPlayer].given << '\n';
-						std::cout << "Last raise is: " << lastRaise << "\n\n";
-
-						std::cout << "Do you want to see your cards and points?(y/n): ";
-
+						printPlayerInfo(players, currentPlayer, pot, lastRaise);
 						askPlayerToPrintDeck(players[currentPlayer], playerAnswer);
 
 						askPlayerAction(players[currentPlayer], lastRaise, currentPlayer, playerAnswer);
-
-						switch (playerAnswer)
-						{
-						case 'r':
-							raise(players[currentPlayer], players, playerCount, lastRaise, pot);
-							lastPlayerToRaise = currentPlayer;
-							break;
-						case 'c':
-							call(players[currentPlayer], lastRaise, pot);
-							break;
-						case 'f':
-							fold(players[currentPlayer]);
-							inGame -= 1;
-							break;
-						}
+						playPlayerAction(players, currentPlayer, playerCount, 
+							playerAnswer, lastRaise, pot, inGame, lastPlayerToRaise);
 
 						if (inGame == 1)
 						{
@@ -138,11 +113,21 @@ int main()
 
 					winnerCount = 0;
 					maxPoints = getMaxPoints(players, playerCount);
-					getWinners(players, playerCount, maxPoints, winnerCount);
+					getWinners(players, playerCount, maxPoints, winnerCount, winnerIndx);
 
+					std::cout << "Pot: " << pot << '\n';
 					std::cout << ((winnerCount > 1) ? ("\nIT'S A TIE!\n") : ("\nWinner is : "));
 					printWinners(players, playerCount);
 
+					if (winnerCount > 1)
+					{
+						readyPlayersForTie(players, playerCount, inGame, pot / 2);
+						continue;
+					}
+					else 
+					{
+						players[winnerIndx].chips += pot;
+					}
 
 					std::cout << '\n' << "Do you want to play again?(y/n): ";
 					playAgain(playerAnswer);
@@ -154,6 +139,9 @@ int main()
 					else
 					{
 						inGame = 0;
+						pot = 0;
+						lastRaise = 0;
+						currentPlayer = 0;
 						resetPlayerStates(players, playerCount, inGame);
 					}
 
