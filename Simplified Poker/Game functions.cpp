@@ -224,22 +224,22 @@ void fold(Player& player)
 }
 
 void playPlayerAction(Player* players, const size_t currentPlayer, 
-	const size_t playerCount, const char playerAnswer, unsigned lastRaise, 
-	unsigned pot, unsigned short inGame, size_t lastPlayerToRaise)
+	const size_t playerCount, const char playerAnswer, unsigned& lastRaise, 
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise)
 {
 	switch (playerAnswer)
 	{
-	case 'r':
-		raise(players[currentPlayer], players, playerCount, lastRaise, pot);
-		lastPlayerToRaise = currentPlayer;
-		break;
-	case 'c':
-		call(players[currentPlayer], lastRaise, pot);
-		break;
-	case 'f':
-		fold(players[currentPlayer]);
-		inGame -= 1;
-		break;
+		case 'r':
+			raise(players[currentPlayer], players, playerCount, lastRaise, pot);
+			lastPlayerToRaise = currentPlayer;
+			break;
+		case 'c':
+			call(players[currentPlayer], lastRaise, pot);
+			break;
+		case 'f':
+			fold(players[currentPlayer]);
+			inGame--;
+			break;
 	}
 }
 
@@ -250,9 +250,9 @@ unsigned getMaxPoints(const Player* players, const size_t playerCount)
 		return 0;
 	}
 
-	unsigned maxPoints = players[0].points;
+	unsigned maxPoints = 0;
 
-	for (size_t indx = 1; indx < playerCount; indx++)
+	for (size_t indx = 0; indx < playerCount; indx++)
 	{
 		if (players[indx].isActive && players[indx].points > maxPoints)
 		{

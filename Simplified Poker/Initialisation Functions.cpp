@@ -207,6 +207,18 @@ void resetPlayerStates(Player*& players, const unsigned short playerCount,
 	}
 }
 
+void resetGameParams(Player*& players, size_t& currentPlayer,
+	const size_t playerCount, unsigned& lastRaise,
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise)
+{
+	inGame = 0;
+	pot = 0;
+	lastRaise = 0;
+	currentPlayer = 0;
+	lastPlayerToRaise = 0;
+	resetPlayerStates(players, playerCount, inGame);
+}
+
 void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame, const unsigned pot)
 {

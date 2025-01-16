@@ -55,10 +55,9 @@ void askPlayerAction(const Player player, const unsigned lastRaise,
 
 void askPlayerToPrintDeck(Player player, char& playerAnswer)
 {
-	std::cout << "Do you want to see your cards and points?(y/n): ";
-
 	do
 	{
+		std::cout << "\nDo you want to see your cards and points?(y/n): ";
 		std::cin >> playerAnswer;
 
 		if (playerAnswer == 'n')
@@ -77,8 +76,10 @@ void askPlayerToPrintDeck(Player player, char& playerAnswer)
 
 void playAgain(char& answer)
 {
+
 	do
 	{
+		std::cout << '\n' << "Do you want to play again?(y/n): ";
 		std::cin >> answer;
 
 		if (answer == 'n' || answer == 'y')

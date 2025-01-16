@@ -56,7 +56,7 @@ int main()
 
 	size_t lastPlayerToRaise = 0;
 	size_t currentPlayer = 0;
-	unsigned short inGame = playerCount;
+	unsigned short inGame;
 
 	unsigned winnerCount = 0;
 	unsigned maxPoints;
@@ -71,6 +71,8 @@ int main()
 		{
 			case '1':
 				enterPlayerCount(playerCount);
+				inGame = playerCount;
+
 				players = new Player[playerCount];
 
 				do
@@ -79,9 +81,6 @@ int main()
 					dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
 
 					finalisePlayerDecks(players, playerCount, pot);
-
-					showPlayerBalances(players, playerCount);
-
 					do
 					{
 						//compiler throws a warning for players[currentPlayer]
@@ -91,9 +90,11 @@ int main()
 						if (!players[currentPlayer].isActive)
 						{
 							currentPlayer++;
+							currentPlayer %= playerCount;
 							continue;
 						}
 
+						showPlayerBalances(players, playerCount);
 						printPlayerInfo(players, currentPlayer, pot, lastRaise);
 						askPlayerToPrintDeck(players[currentPlayer], playerAnswer);
 
@@ -115,7 +116,7 @@ int main()
 					maxPoints = getMaxPoints(players, playerCount);
 					getWinners(players, playerCount, maxPoints, winnerCount, winnerIndx);
 
-					std::cout << "Pot: " << pot << '\n';
+					std::cout << "\nPot: " << pot << '\n';
 					std::cout << ((winnerCount > 1) ? ("\nIT'S A TIE!\n") : ("\nWinner is : "));
 					printWinners(players, playerCount);
 
@@ -129,21 +130,15 @@ int main()
 						players[winnerIndx].chips += pot;
 					}
 
-					std::cout << '\n' << "Do you want to play again?(y/n): ";
 					playAgain(playerAnswer);
 
 					if (playerAnswer == 'n')
 					{
 						break;
 					}
-					else
-					{
-						inGame = 0;
-						pot = 0;
-						lastRaise = 0;
-						currentPlayer = 0;
-						resetPlayerStates(players, playerCount, inGame);
-					}
+
+					resetGameParams(players, currentPlayer, playerCount, lastRaise,
+						pot, inGame, lastPlayerToRaise);
 
 				} while (true);
 				

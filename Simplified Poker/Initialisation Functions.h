@@ -47,5 +47,9 @@ void finalisePlayerDecks(Player* players, const size_t playerCount, unsigned& po
 void resetPlayerStates(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame);
 
+void resetGameParams(Player*& players, size_t& currentPlayer,
+	const size_t playerCount, unsigned& lastRaise,
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise);
+
 void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame, const unsigned pot);

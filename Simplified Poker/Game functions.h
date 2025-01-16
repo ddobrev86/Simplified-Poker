@@ -41,8 +41,8 @@ void call(Player& player, unsigned& lastRaise, unsigned& pot);
 void fold(Player& player);
 
 void playPlayerAction(Player* players, const size_t currentPlayer,
-	const size_t playerCount, const char playerAnswer, unsigned lastRaise,
-	unsigned pot, unsigned short inGame, size_t lastPlayerToRaise);
+	const size_t playerCount, const char playerAnswer, unsigned& lastRaise,
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise);
 
 unsigned getMaxPoints(const Player* players, const size_t playerCount);
 
