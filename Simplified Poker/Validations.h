@@ -19,7 +19,7 @@
 
 void enterPlayerCount(unsigned short& playerCount);
 
-void askPlayerAction(const Player player, const unsigned lastRaise,
+void askPlayerAction(const Player player, const unsigned maxBet,
 	const size_t playerIndx, char& playerAnswer);
 
 void askPlayerToPrintDeck(Player player, char& playerAnswer);

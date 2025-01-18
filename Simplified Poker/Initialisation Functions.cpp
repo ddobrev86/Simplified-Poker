@@ -48,7 +48,7 @@ void printPlayers(const Player* players, const unsigned short playerCount)
 }
 
 void printPlayerInfo(const Player* players, const size_t currentPlayer,
-	const unsigned pot, const unsigned lastRaise)
+	const unsigned pot, const unsigned lastRaise, const unsigned maxBet)
 {
 	if (!players)
 	{
@@ -58,14 +58,14 @@ void printPlayerInfo(const Player* players, const size_t currentPlayer,
 	std::cout << '\n' << "Pot: " << pot << '\n';
 	std::cout << '\n' << "Player " << currentPlayer + 1 << "\n";
 	std::cout << "You have given: " << players[currentPlayer].given << '\n';
-	std::cout << "Last raise is: " << lastRaise << '\n';
-	std::cout << "Minimum raise: " << lastRaise + CHIP_VALUE << "\n\n";
+	std::cout << "Minimum raise: " << lastRaise + CHIP_VALUE << "\n";
+	std::cout << "Amount to call to: " << maxBet << '\n';
 
 }
 
 void showPlayerBalances(const Player* players, const unsigned short playerCount)
 {
-	std::cout << '\n';
+	//std::cout << '\n';
 
 	size_t toBePrinted = playerCount;
 	const int PLAYERS_PER_ROW = 3;
@@ -209,13 +209,14 @@ void resetPlayerStates(Player*& players, const unsigned short playerCount,
 
 void resetGameParams(Player*& players, size_t& currentPlayer,
 	const size_t playerCount, unsigned& lastRaise,
-	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise)
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet)
 {
 	inGame = 0;
 	pot = 0;
 	lastRaise = 0;
 	currentPlayer = 0;
 	lastPlayerToRaise = 0;
+	maxBet = 0;
 	resetPlayerStates(players, playerCount, inGame);
 }
 

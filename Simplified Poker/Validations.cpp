@@ -29,16 +29,16 @@ void enterPlayerCount(unsigned short& playerCount)
 	} while (true);
 }
 
-void askPlayerAction(const Player player, const unsigned lastRaise, 
+void askPlayerAction(const Player player, const unsigned maxBet, 
 	const size_t playerIndx, char& playerAnswer)
 {
-	if (lastRaise < 0)
+	if (maxBet < 0)
 	{
 		std::cout << "Invalid input";
 		return;
 	}
 
-	bool canCall = (player.given < lastRaise);
+	bool canCall = (player.given < maxBet);
 
 	do
 	{

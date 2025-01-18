@@ -34,15 +34,15 @@ unsigned short calculatePlayerPoints(const Card* playerCards);
 unsigned calculateMinPlayerBalance(const Player* players, const unsigned short playerCount);
 
 void raise(Player& player, const Player* allPlayers,
-	const unsigned short playerCount, unsigned& lastRaise, unsigned& pot);
+	const unsigned short playerCount, unsigned& lastRaise, unsigned& pot, unsigned& maxBet);
 
-void call(Player& player, unsigned& lastRaise, unsigned& pot);
+void call(Player& player, unsigned& maxBet, unsigned& pot);
 
 void fold(Player& player);
 
 void playPlayerAction(Player* players, const size_t currentPlayer,
 	const size_t playerCount, const char playerAnswer, unsigned& lastRaise,
-	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise);
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet);
 
 unsigned getMaxPoints(const Player* players, const size_t playerCount);
 

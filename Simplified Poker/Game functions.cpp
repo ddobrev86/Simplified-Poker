@@ -158,7 +158,7 @@ unsigned calculateMinPlayerBalance(const Player* players, const unsigned short p
 }
 
 void raise(Player& player, const Player* allPlayers,
-	const unsigned short playerCount, unsigned& lastRaise, unsigned& pot)
+	const unsigned short playerCount, unsigned& lastRaise, unsigned& pot, unsigned& maxBet)
 {
 	if (!allPlayers)
 	{
@@ -197,19 +197,20 @@ void raise(Player& player, const Player* allPlayers,
 
 	} while (!(belowMin && overLastRaise));
 
-	unsigned toGive = raise - player.given;
+	//unsigned toGive = raise - player.given;
 
-	player.chips -= toGive;
-	player.given += toGive;
+	player.chips -= raise;
+	player.given += raise;
 
-	pot += toGive;
+	pot += raise;
 
 	lastRaise = raise;
+	maxBet = player.given;
 }
 
-void call(Player& player, unsigned& lastRaise, unsigned& pot)
+void call(Player& player, unsigned& maxBet, unsigned& pot)
 {
-	unsigned toGive = lastRaise - player.given;
+	unsigned toGive = maxBet - player.given;
 
 	player.chips -= toGive;
 	player.given += toGive;
@@ -225,16 +226,16 @@ void fold(Player& player)
 
 void playPlayerAction(Player* players, const size_t currentPlayer, 
 	const size_t playerCount, const char playerAnswer, unsigned& lastRaise, 
-	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise)
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet)
 {
 	switch (playerAnswer)
 	{
 		case 'r':
-			raise(players[currentPlayer], players, playerCount, lastRaise, pot);
+			raise(players[currentPlayer], players, playerCount, lastRaise, pot, maxBet);
 			lastPlayerToRaise = currentPlayer;
 			break;
 		case 'c':
-			call(players[currentPlayer], lastRaise, pot);
+			call(players[currentPlayer], maxBet, pot);
 			break;
 		case 'f':
 			fold(players[currentPlayer]);

@@ -26,7 +26,7 @@ void printDeck(const Card* deck, const unsigned cardsCount, const char separator
 void printPlayers(const Player* players, const unsigned short playerCount);
 
 void printPlayerInfo(const Player* players, const size_t currentPlayer,
-	const unsigned pot, const unsigned lastRaise);
+	const unsigned pot, const unsigned lastRaise, const unsigned maxBet);
 
 void showPlayerBalances(const Player* players, const unsigned short playerCount);
 
@@ -49,7 +49,7 @@ void resetPlayerStates(Player*& players, const unsigned short playerCount,
 
 void resetGameParams(Player*& players, size_t& currentPlayer,
 	const size_t playerCount, unsigned& lastRaise,
-	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise);
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet);
 
 void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame, const unsigned pot);

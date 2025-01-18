@@ -54,6 +54,7 @@ int main()
 
 	unsigned lastRaise = 0;
 	unsigned pot = 0;
+	unsigned maxBet = 0;
 
 	size_t lastPlayerToRaise = 0;
 	size_t currentPlayer = 0;
@@ -97,12 +98,12 @@ int main()
 						system("cls");
 
 						showPlayerBalances(players, playerCount);
-						printPlayerInfo(players, currentPlayer, pot, lastRaise);
+						printPlayerInfo(players, currentPlayer, pot, lastRaise, maxBet);
 						askPlayerToPrintDeck(players[currentPlayer], playerAnswer);
 
-						askPlayerAction(players[currentPlayer], lastRaise, currentPlayer, playerAnswer);
+						askPlayerAction(players[currentPlayer], maxBet, currentPlayer, playerAnswer);
 						playPlayerAction(players, currentPlayer, playerCount, 
-							playerAnswer, lastRaise, pot, inGame, lastPlayerToRaise);
+							playerAnswer, lastRaise, pot, inGame, lastPlayerToRaise, maxBet);
 
 						if (inGame == 1)
 						{
@@ -118,7 +119,9 @@ int main()
 					maxPoints = getMaxPoints(players, playerCount);
 					getWinners(players, playerCount, maxPoints, winnerCount, winnerIndx);
 
-					std::cout << "\nPot: " << pot << '\n';
+					system("cls");
+
+					std::cout << "Pot: " << pot << '\n';
 					std::cout << ((winnerCount > 1) ? ("\nIT'S A TIE!\n") : ("\nWinner is : "));
 					printWinners(players, playerCount);
 
@@ -140,7 +143,7 @@ int main()
 					}
 
 					resetGameParams(players, currentPlayer, playerCount, lastRaise,
-						pot, inGame, lastPlayerToRaise);
+						pot, inGame, lastPlayerToRaise, maxBet);
 
 				} while (true);
 				
