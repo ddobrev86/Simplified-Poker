@@ -202,6 +202,7 @@ void resetPlayerStates(Player*& players, const unsigned short playerCount,
 		{
 			players[indx].isActive = true;
 			players[indx].given = 0;
+			players[indx].allIn = false;
 			inGame++;
 		}
 	}
@@ -232,7 +233,7 @@ void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 	{
 		if (players[indx].isActive)
 		{
-			if (players[indx].chips == 0)
+			if (players[indx].allIn)
 			{
 				players[indx].chips += TIE_COMPENSATION;
 			}

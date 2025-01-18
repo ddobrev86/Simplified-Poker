@@ -148,7 +148,7 @@ unsigned calculateMinPlayerBalance(const Player* players, const unsigned short p
 
 	for (size_t indx = 0; indx < playerCount; indx++)
 	{
-		if (players[indx].isActive && players[indx].chips < min)
+		if (players[indx].isActive && players[indx].chips < min && !players[indx].allIn)
 		{
 			min = players[indx].chips;
 		}
@@ -171,14 +171,25 @@ void raise(Player& player, const Player* allPlayers,
 	bool belowMin = false;
 	bool overLastRaise = false;
 
+	char allInAnswer;
+
 	do
 	{
 		std::cout << std::endl << "Enter your raise: ";
 		std::cin >> raise;
 
-		if (raise > player.chips)
+		if (raise >= player.chips)
 		{
-			std::cout << "You don't have enough chips for this bet\n";
+			std::cout << "You don't have enough chips for this bet. Do you want"
+				"to go all-in?(y/n)\n";
+
+			std::cin >> allInAnswer;
+			if (allInAnswer == 'y')
+			{
+				player.allIn = true;
+				raise = player.chips;
+				break;
+			}
 			continue;
 		}
 

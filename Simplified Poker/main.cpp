@@ -89,7 +89,7 @@ int main()
 						if (currentPlayer >= playerCount)
 							break;
 
-						if (!players[currentPlayer].isActive)
+						if (!players[currentPlayer].isActive || players[currentPlayer].allIn)
 						{
 							currentPlayer++;
 							currentPlayer %= playerCount;

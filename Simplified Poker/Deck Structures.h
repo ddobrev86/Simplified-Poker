@@ -14,6 +14,7 @@
 */
 
 #pragma once
+#include <stdlib.h>
 
 struct CardType
 {

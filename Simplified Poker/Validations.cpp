@@ -25,7 +25,8 @@ void enterPlayerCount(unsigned short& playerCount)
 		if (playerCount >= 2 && playerCount <= 9)
 			break;
 
-		std::cout << "Player count must be between 2 and 9!" << std::endl;
+		system("cls");
+		std::cout << "Player count must be between 2 and 9!";
 	} while (true);
 }
 
@@ -43,13 +44,20 @@ void askPlayerAction(const Player player, const unsigned maxBet,
 	do
 	{
 		if (canCall)
-			std::cout << "Player " << playerIndx + 1 << " do you raise, call, or fold(r/c/f): ";
+			std::cout << "\nPlayer " << playerIndx + 1 << " do you raise, call, or fold(r/c/f): ";
 		else
-			std::cout << "Player " << playerIndx + 1 << " do you raise, or fold(r/f): ";
+			std::cout << "\nPlayer " << playerIndx + 1 << " do you raise, or fold(r/f): ";
 
 		std::cin >> playerAnswer;
 
-	} while (playerAnswer != 'r' && playerAnswer != 'f' && (playerAnswer != 'c' && canCall));
+		if (playerAnswer == 'r' || playerAnswer == 'f' || (canCall ? playerAnswer == 'c' : false))
+		{
+			break;
+		}
+		//system("cls");
+		std::cout << "Please choose a valid option\n";
+
+	} while (true);
 
 }
 
@@ -66,7 +74,8 @@ void askPlayerToPrintDeck(Player player, char& playerAnswer)
 		if (playerAnswer == 'y')
 			break;
 
-		std::cout << "Enter a valid option";
+		//system("cls");
+		std::cout << "Please choose a valid option\n";
 	} while (true);
 
 	printDeck(player.cards, CARDS_PER_PLAYER, ' ');
@@ -79,13 +88,14 @@ void playAgain(char& answer)
 
 	do
 	{
-		std::cout << '\n' << "Do you want to play again?(y/n): ";
+		std::cout << "Do you want to play again?(y/n): ";
 		std::cin >> answer;
 
 		if (answer == 'n' || answer == 'y')
 			return;
 
-		std::cout << "Enter a valid option";
+		system("cls");
+		std::cout << "Please choose a valid option\n";
 	} while (true);
 }
 
@@ -113,7 +123,8 @@ void askPlayerToJoinTie(Player player, const size_t indx,
 			break;
 		}
 
-		std::cout << "Enter valid input\n";
+		system("cls");
+		std::cout << "Please choose a valid option\n";
 
 	} while (true);
 }
