@@ -42,14 +42,15 @@ void shuffleDeck(const unsigned cardsInDeck, Card* deck);
 void dealCardsToPlayers(const unsigned short playerCount, const unsigned short cardsPerPlayer, 
 	Card* deck, Player* players);
 
-void finalisePlayerDecks(Player* players, const size_t playerCount, unsigned& pot);
+void finalisePlayerDecks(Player* players, const unsigned short playerCount, 
+	unsigned& pot);
 
 void resetPlayerStates(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame);
 
 void resetGameParams(Player*& players, size_t& currentPlayer,
-	const size_t playerCount, unsigned& lastRaise,
+	const unsigned short playerCount, unsigned& lastRaise,
 	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet);
 
 void readyPlayersForTie(Player*& players, const unsigned short playerCount,
-	unsigned short& inGame, const unsigned pot);
+	unsigned short& inGame, const unsigned pot, char& playerAnswer);

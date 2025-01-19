@@ -55,6 +55,7 @@ int main()
 	unsigned lastRaise = 0;
 	unsigned pot = 0;
 	unsigned maxBet = 0;
+	unsigned minBalance = 0;
 
 	size_t lastPlayerToRaise = 0;
 	size_t currentPlayer = 0;
@@ -101,9 +102,11 @@ int main()
 						printPlayerInfo(players, currentPlayer, pot, lastRaise, maxBet);
 						askPlayerToPrintDeck(players[currentPlayer], playerAnswer);
 
-						askPlayerAction(players[currentPlayer], maxBet, currentPlayer, playerAnswer);
+						askPlayerAction(players[currentPlayer], maxBet, currentPlayer, 
+							playerAnswer, players, playerCount, lastRaise, minBalance);
 						playPlayerAction(players, currentPlayer, playerCount, 
-							playerAnswer, lastRaise, pot, inGame, lastPlayerToRaise, maxBet);
+							playerAnswer, lastRaise, pot, inGame, 
+							lastPlayerToRaise, maxBet, minBalance);
 
 						if (inGame == 1)
 						{
@@ -127,7 +130,9 @@ int main()
 
 					if (winnerCount > 1)
 					{
-						readyPlayersForTie(players, playerCount, inGame, pot / 2);
+						readyPlayersForTie(players, playerCount, inGame, pot / 2, playerAnswer);
+						lastRaise = 0;
+						maxBet = 0;
 						continue;
 					}
 					else 
@@ -144,6 +149,12 @@ int main()
 
 					resetGameParams(players, currentPlayer, playerCount, lastRaise,
 						pot, inGame, lastPlayerToRaise, maxBet);
+
+					if (inGame == 1)
+					{
+						std::cout << "Player " << winnerIndx + 1 << " is the only player left and winner";
+						break;
+					}
 
 				} while (true);
 				

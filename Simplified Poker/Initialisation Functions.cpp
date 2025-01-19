@@ -175,16 +175,29 @@ void dealCardsToPlayers(const unsigned short playerCount, const unsigned short c
 	}
 }
 
-void finalisePlayerDecks(Player* players, const size_t playerCount, unsigned& pot)
+void finalisePlayerDecks(Player* players, const unsigned short playerCount, 
+	unsigned& pot)
 {
 	for (size_t playerIndx = 0; playerIndx < playerCount; playerIndx++)
 	{
-		orderPlayerCards(players[playerIndx]);
-		players[playerIndx].points = calculatePlayerPoints(players[playerIndx].cards);
+		if (players[playerIndx].isActive)
+		{
+			orderPlayerCards(players[playerIndx]);
+			players[playerIndx].points = calculatePlayerPoints(players[playerIndx].cards);
 
-		players[playerIndx].chips -= CHIP_VALUE;
-		//players[playerIndx].given += CHIP_VALUE;
-		pot += CHIP_VALUE;
+
+			if (players[playerIndx].chips <= CHIP_VALUE)
+			{
+				players[playerIndx].chips = 0;
+				players[playerIndx].allIn = true;
+			}
+			else
+			{
+				players[playerIndx].chips -= CHIP_VALUE;
+			}
+
+			pot += CHIP_VALUE;
+		}
 	}
 }
 
@@ -209,7 +222,7 @@ void resetPlayerStates(Player*& players, const unsigned short playerCount,
 }
 
 void resetGameParams(Player*& players, size_t& currentPlayer,
-	const size_t playerCount, unsigned& lastRaise,
+	const unsigned short playerCount, unsigned& lastRaise,
 	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet)
 {
 	inGame = 0;
@@ -222,7 +235,7 @@ void resetGameParams(Player*& players, size_t& currentPlayer,
 }
 
 void readyPlayersForTie(Player*& players, const unsigned short playerCount,
-	unsigned short& inGame, const unsigned pot)
+	unsigned short& inGame, const unsigned pot, char& playerAnswer)
 {
 	if (!players)
 	{
@@ -237,10 +250,14 @@ void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 			{
 				players[indx].chips += TIE_COMPENSATION;
 			}
+
+			players[indx].given = 0;
+			players[indx].allIn = false;
 		}
 		else
 		{
-			askPlayerToJoinTie(players[indx], indx, pot, inGame);
+			if(players[indx].chips > 0)
+				askPlayerToJoinTie(players[indx], indx, pot, inGame, playerAnswer);
 		}
 	}
 }

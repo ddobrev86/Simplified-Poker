@@ -16,6 +16,7 @@
 
 #include "Player Structures.h"
 #include "Deck Structures.h"
+#include "Initialisation Functions.h"
 
 void orderTwoCardsInPlayerHand(Card& firstCard, Card& secondCard);
 
@@ -34,18 +35,20 @@ unsigned short calculatePlayerPoints(const Card* playerCards);
 unsigned calculateMinPlayerBalance(const Player* players, const unsigned short playerCount);
 
 void raise(Player& player, const Player* allPlayers,
-	const unsigned short playerCount, unsigned& lastRaise, unsigned& pot, unsigned& maxBet);
+	const unsigned short playerCount, 
+	unsigned& lastRaise, unsigned& pot, unsigned& maxBet, const unsigned minBalance);
 
 void call(Player& player, unsigned& maxBet, unsigned& pot);
 
 void fold(Player& player);
 
 void playPlayerAction(Player* players, const size_t currentPlayer,
-	const size_t playerCount, const char playerAnswer, unsigned& lastRaise,
-	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet);
+	const unsigned short playerCount, const char playerAnswer, unsigned& lastRaise,
+	unsigned& pot, unsigned short& inGame, 
+	size_t& lastPlayerToRaise, unsigned& maxBet, const unsigned minBalance);
 
-unsigned getMaxPoints(const Player* players, const size_t playerCount);
+unsigned getMaxPoints(const Player* players, const unsigned short playerCount);
 
-void getWinners(Player* players, const size_t playerCount, const unsigned maxPoints,
+void getWinners(Player* players, const unsigned short playerCount, const unsigned maxPoints,
 	unsigned& winnerCount, size_t& winnerIndx);
 

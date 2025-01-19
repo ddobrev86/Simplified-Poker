@@ -16,15 +16,22 @@
 
 #include "Player Structures.h"
 #include "Initialisation Functions.h"
+#include "Game functions.h"
+
+void askPlayerYesOrNo(char& playerAnswer);
 
 void enterPlayerCount(unsigned short& playerCount);
 
 void askPlayerAction(const Player player, const unsigned maxBet,
-	const size_t playerIndx, char& playerAnswer);
+	const size_t playerIndx, char& playerAnswer, const Player* players,
+	const unsigned short playerCount, const unsigned lastRaise,
+	unsigned& minBalance);
 
-void askPlayerToPrintDeck(Player player, char& playerAnswer);
+void askPlayerToPrintDeck(const Player player, char& playerAnswer);
 
-void playAgain(char& answer);
+void askToGoAllIn(char& playerAnswer);
 
-void askPlayerToJoinTie(Player player, const size_t indx, 
-	const unsigned pot, unsigned short& inGame);
+void playAgain(char& playerAnswer);
+
+void askPlayerToJoinTie(Player& player, const size_t indx, 
+	const unsigned pot, unsigned short& inGame, char& playerAnswer);

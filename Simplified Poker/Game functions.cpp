@@ -1,5 +1,4 @@
 #include "Game functions.h"
-#include "Initialisation Functions.h"
 #include <iostream>
 
 const unsigned short SEVEN_OF_CLUBS_POINTS = 11;
@@ -158,14 +157,15 @@ unsigned calculateMinPlayerBalance(const Player* players, const unsigned short p
 }
 
 void raise(Player& player, const Player* allPlayers,
-	const unsigned short playerCount, unsigned& lastRaise, unsigned& pot, unsigned& maxBet)
+	const unsigned short playerCount, unsigned& lastRaise, 
+	unsigned& pot, unsigned& maxBet, const unsigned minBalance)
 {
 	if (!allPlayers)
 	{
 		return;
 	}
 
-	unsigned minBalance = calculateMinPlayerBalance(allPlayers, playerCount);
+	//unsigned minBalance = calculateMinPlayerBalance(allPlayers, playerCount);
 
 	unsigned raise;
 	bool belowMin = false;
@@ -175,35 +175,36 @@ void raise(Player& player, const Player* allPlayers,
 
 	do
 	{
-		std::cout << std::endl << "Enter your raise: ";
+		std::cout << "\nEnter your raise: ";
 		std::cin >> raise;
+
+		belowMin = (raise <= minBalance);
+		overLastRaise = (lastRaise + CHIP_VALUE <= raise);
+
+		if (!belowMin && minBalance != player.chips)
+		{
+			std::cout << "Raise shouldn't exceed the min player balance(" << minBalance << ")" << std::endl;
+			continue;
+		}
+
+		if (!overLastRaise)
+		{
+			std::cout << "Raise should be at least " << lastRaise + CHIP_VALUE << std::endl;
+			continue;
+		}
 
 		if (raise >= player.chips)
 		{
-			std::cout << "You don't have enough chips for this bet. Do you want"
-				"to go all-in?(y/n)\n";
+			askToGoAllIn(allInAnswer);
 
-			std::cin >> allInAnswer;
 			if (allInAnswer == 'y')
 			{
 				player.allIn = true;
 				raise = player.chips;
 				break;
 			}
+
 			continue;
-		}
-
-		belowMin = (raise < minBalance);
-		overLastRaise = (lastRaise + CHIP_VALUE <= raise);
-
-		if (!belowMin)
-		{
-			std::cout << "Raise shouldn't exceed the min player balance(" << minBalance << ")" << std::endl;
-		}
-
-		if (!overLastRaise)
-		{
-			std::cout << "Raise should be at least " << lastRaise + CHIP_VALUE << std::endl;
 		}
 
 	} while (!(belowMin && overLastRaise));
@@ -236,13 +237,16 @@ void fold(Player& player)
 }
 
 void playPlayerAction(Player* players, const size_t currentPlayer, 
-	const size_t playerCount, const char playerAnswer, unsigned& lastRaise, 
-	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet)
+	const unsigned short playerCount, const char playerAnswer, unsigned& lastRaise,
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet,
+	const unsigned minBalance)
 {
 	switch (playerAnswer)
 	{
 		case 'r':
-			raise(players[currentPlayer], players, playerCount, lastRaise, pot, maxBet);
+			raise(players[currentPlayer], players, playerCount, 
+				lastRaise, pot, maxBet, minBalance);
+
 			lastPlayerToRaise = currentPlayer;
 			break;
 		case 'c':
@@ -255,7 +259,7 @@ void playPlayerAction(Player* players, const size_t currentPlayer,
 	}
 }
 
-unsigned getMaxPoints(const Player* players, const size_t playerCount)
+unsigned getMaxPoints(const Player* players, const unsigned short playerCount)
 {
 	if (!players)
 	{
@@ -275,7 +279,8 @@ unsigned getMaxPoints(const Player* players, const size_t playerCount)
 	return maxPoints;
 }
 
-void getWinners(Player* players, const size_t playerCount, const unsigned maxPoints,
+void getWinners(Player* players, const unsigned short playerCount, 
+	const unsigned maxPoints,
 	unsigned& winnerCount, size_t& winnerIndx)
 {
 	if (!players)
