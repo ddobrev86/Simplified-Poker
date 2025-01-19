@@ -58,8 +58,8 @@ void printPlayerInfo(const Player* players, const size_t currentPlayer,
 	std::cout << '\n' << "Pot: " << pot << '\n';
 	std::cout << '\n' << "Player " << currentPlayer + 1 << "\n";
 	std::cout << "You have given: " << players[currentPlayer].given << '\n';
-	std::cout << "Minimum raise: " << lastRaise + CHIP_VALUE << "\n";
 	std::cout << "Amount to call to: " << maxBet << '\n';
+	std::cout << "Minimum raise: " << lastRaise + CHIP_VALUE << "\n";
 
 }
 
@@ -105,6 +105,15 @@ void showPlayerBalances(const Player* players, const unsigned short playerCount,
 	}
 }
 
+void printInfoHeader(const Player* players, const unsigned short playerCount, const size_t currentPlayer,
+	const unsigned pot, const unsigned lastRaise, const unsigned maxBet,
+	const bool isTie, char& playerAnswer)
+{
+	showPlayerBalances(players, playerCount, isTie);
+	printPlayerInfo(players, currentPlayer, pot, lastRaise, maxBet);
+	askPlayerToPrintDeck(players[currentPlayer], playerAnswer);
+}
+
 void printWinners(const Player* players, const unsigned short playerCount)
 {
 	if (!players)
@@ -121,6 +130,14 @@ void printWinners(const Player* players, const unsigned short playerCount)
 	}
 
 	std::cout << std::endl;
+}
+
+void printWinnersHeader(const Player* players, const unsigned short playerCount, 
+	const unsigned pot, size_t& winnerCount)
+{
+	std::cout << "Pot: " << pot << '\n';
+	std::cout << ((winnerCount > 1) ? ("\nIT'S A TIE!\n") : ("\nWinner is : "));
+	printWinners(players, playerCount);
 }
 
 Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites, 
@@ -260,12 +277,17 @@ void resetGameParams(Player*& players, size_t& currentPlayer,
 }
 
 void readyPlayersForTie(Player*& players, const unsigned short playerCount,
-	unsigned short& inGame, const unsigned pot, char& playerAnswer)
+	unsigned short& inGame, const unsigned pot, char& playerAnswer,
+	unsigned& lastRaise, unsigned& maxBet, bool& isTie)
 {
 	if (!players)
 	{
 		return;
 	}
+
+	lastRaise = 0;
+	maxBet = 0;
+	isTie = true;
 
 	for (size_t indx = 0; indx < playerCount; indx++)
 	{
@@ -305,4 +327,20 @@ unsigned countActiveOrNotAllInPlayers(const Player* players, const unsigned shor
 	}
 
 	return count;
+}
+
+void playerAction(Player* players, const size_t currentPlayer,
+	const unsigned short playerCount, char& playerAnswer, unsigned& lastRaise,
+	unsigned& pot, unsigned short& inGame,
+	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance)
+{
+	if (!players)
+	{
+		return;
+	}
+
+	askPlayerAction(players[currentPlayer], maxBet, currentPlayer, playerAnswer, 
+		players, playerCount, lastRaise, minBalance);
+	playPlayerAction(players, currentPlayer, playerCount, playerAnswer, lastRaise, 
+		pot, inGame, lastPlayerToRaise, maxBet, minBalance);
 }

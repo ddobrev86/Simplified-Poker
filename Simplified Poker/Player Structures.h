@@ -22,7 +22,7 @@ const unsigned STARTING_CHIP_COUNT = 100;
 
 struct Player
 {
-	bool isActive;
+	bool isActive = true;
 	bool allIn = false;
 	unsigned short points;
 	unsigned chips = STARTING_CHIP_COUNT * CHIP_VALUE;

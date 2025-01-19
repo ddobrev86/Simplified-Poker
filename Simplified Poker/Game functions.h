@@ -52,3 +52,8 @@ unsigned getMaxPoints(const Player* players, const unsigned short playerCount);
 void getWinners(Player* players, const unsigned short playerCount, const unsigned maxPoints,
 	unsigned& winnerCount, size_t& winnerIndx);
 
+void bettingPhase(Player* players, size_t& currentPlayer,
+	const unsigned short playerCount, char& playerAnswer, unsigned& lastRaise,
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet,
+	unsigned& minBalance, bool& isTie);
+

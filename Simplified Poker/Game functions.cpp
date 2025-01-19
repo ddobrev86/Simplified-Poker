@@ -118,6 +118,7 @@ unsigned short calculatePlayerPoints(const Card* playerCards)
 	if (identicalTypes > 1 || identicalSuits > 1)
 	{
 		points = sumCardValues(playerCards, playerHasSevenOfClubs);
+		hasTwoSevens = false;
 	}
 	else if (hasTwoSevens)
 	{
@@ -308,4 +309,42 @@ void getWinners(Player* players, const unsigned short playerCount,
 			}
 		}
 	}
+}
+
+
+void bettingPhase(Player* players, size_t& currentPlayer,
+	const unsigned short playerCount, char& playerAnswer, unsigned& lastRaise,
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet,
+	unsigned& minBalance, bool& isTie)
+{
+	do
+	{
+		//compiler throws a warning for players[currentPlayer]
+		if (currentPlayer >= playerCount)
+			break;
+
+		if (!players[currentPlayer].isActive)
+		{
+			currentPlayer++;
+			currentPlayer %= playerCount;
+			continue;
+		}
+		system("cls");
+
+		printInfoHeader(players, playerCount, currentPlayer, pot,
+			lastRaise, maxBet, isTie, playerAnswer);
+
+		if (!players[currentPlayer].allIn)
+		{
+			playerAction(players, currentPlayer, playerCount, playerAnswer, lastRaise,
+				pot, inGame, lastPlayerToRaise, maxBet, minBalance);
+		}
+
+		if (inGame == 1)
+			break;
+
+		currentPlayer++;
+		currentPlayer %= playerCount;
+
+	} while (lastPlayerToRaise != currentPlayer);
 }

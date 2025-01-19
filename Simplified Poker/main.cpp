@@ -19,6 +19,7 @@
 #include "Player Structures.h"
 #include "Validations.h"
 #include "Game functions.h"
+#include "File Handling.h"
 #include <stdlib.h>
 
 const unsigned TYPES_COUNT = 8;
@@ -79,7 +80,6 @@ int main()
 			case '1':
 				enterPlayerCount(playerCount);
 				inGame = playerCount;
-
 				players = new Player[playerCount];
 
 				do
@@ -88,59 +88,21 @@ int main()
 					dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
 
 					finalisePlayerDecks(players, playerCount, pot);
-					do
-					{
-						//compiler throws a warning for players[currentPlayer]
-						if (currentPlayer >= playerCount)
-							break;
 
-						if (!players[currentPlayer].isActive)
-						{
-							currentPlayer++;
-							currentPlayer %= playerCount;
-							continue;
-						}
-						system("cls");
-
-						showPlayerBalances(players, playerCount, isTie);
-						printPlayerInfo(players, currentPlayer, pot, lastRaise, maxBet);
-						askPlayerToPrintDeck(players[currentPlayer], playerAnswer);
-
-						if (!players[currentPlayer].allIn)
-						{
-							askPlayerAction(players[currentPlayer], maxBet, currentPlayer,
-								playerAnswer, players, playerCount, lastRaise, minBalance);
-							playPlayerAction(players, currentPlayer, playerCount,
-								playerAnswer, lastRaise, pot, inGame,
-								lastPlayerToRaise, maxBet, minBalance);
-						}
-						
-						if (inGame == 1)
-						{
-							break;
-						}
-
-						currentPlayer++;
-						currentPlayer %= playerCount;
-
-					} while (lastPlayerToRaise != currentPlayer);
+					bettingPhase(players, currentPlayer, playerCount, playerAnswer, lastRaise, 
+						pot, inGame, lastPlayerToRaise, maxBet, minBalance, isTie);
 
 					winnerCount = 0;
 					maxPoints = getMaxPoints(players, playerCount);
 					getWinners(players, playerCount, maxPoints, winnerCount, winnerIndx);
 
 					system("cls");
-
-					std::cout << "Pot: " << pot << '\n';
-					std::cout << ((winnerCount > 1) ? ("\nIT'S A TIE!\n") : ("\nWinner is : "));
-					printWinners(players, playerCount);
+					printWinnersHeader(players, playerCount, pot, winnerCount);
 
 					if (winnerCount > 1)
 					{
-						readyPlayersForTie(players, playerCount, inGame, pot / 2, playerAnswer);
-						lastRaise = 0;
-						maxBet = 0;
-						isTie = true;
+						readyPlayersForTie(players, playerCount, inGame, pot / 2, playerAnswer,
+							lastRaise, maxBet, isTie);
 						continue;
 					}
 					else 
@@ -152,6 +114,9 @@ int main()
 
 					if (playerAnswer == 'n')
 					{
+						delete[] players;
+						players = nullptr;
+
 						break;
 					}
 
@@ -160,8 +125,7 @@ int main()
 
 					if (inGame == 1)
 					{
-						std::cout << "\nPlayer " << winnerIndx + 1 << 
-							" is the only player left and is the winner\n\n";
+						std::cout << "\nPlayer " << winnerIndx + 1 << " is the only player left and is the winner\n\n";
 						break;
 					}
 
@@ -170,6 +134,11 @@ int main()
 
 				break;
 			case '2':
+				if (getGameInfo(players, playerCount))
+				{
+
+				}
+
 				break;
 			case '3':
 				closeProgram = true;
@@ -186,9 +155,6 @@ int main()
 	//--------------------------------------
 	delete[] deck;
 	deck = nullptr;
-
-	delete[] players;
-	players = nullptr;
 
 	return 0;
 }

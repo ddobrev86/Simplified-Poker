@@ -27,6 +27,9 @@
     <ClCompile Include="Game functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="File Handling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Initialisation Functions.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="File Handling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

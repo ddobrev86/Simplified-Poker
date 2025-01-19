@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="File Handling.cpp" />
     <ClCompile Include="Game functions.cpp" />
     <ClCompile Include="Initialisation Functions.cpp" />
     <ClCompile Include="main.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deck Structures.h" />
+    <ClInclude Include="File Handling.h" />
     <ClInclude Include="Game functions.h" />
     <ClInclude Include="Initialisation Functions.h" />
     <ClInclude Include="Player Structures.h" />

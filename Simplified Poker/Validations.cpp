@@ -178,6 +178,8 @@ void askPlayerToJoinTie(Player& player, const size_t indx,
 	{
 		player.chips -= pot;
 		player.isActive = true;
+		player.allIn = false;
+		player.given = 0;
 		inGame++;
 	}
 }

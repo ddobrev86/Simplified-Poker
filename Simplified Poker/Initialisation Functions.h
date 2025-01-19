@@ -31,7 +31,14 @@ void printPlayerInfo(const Player* players, const size_t currentPlayer,
 void showPlayerBalances(const Player* players, const unsigned short playerCount,
 	const bool isTie);
 
+void printInfoHeader(const Player* players, const unsigned short playerCount, const size_t currentPlayer,
+	const unsigned pot, const unsigned lastRaise, const unsigned maxBet,
+	const bool isTie, char& playerAnswer);
+
 void printWinners(const Player* players, const unsigned short playerCount);
+
+void printWinnersHeader(const Player* players, const unsigned short playerCount,
+	const unsigned pot, size_t& winnerCount);
 
 Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites,
 	const unsigned typesCount, const unsigned suitsCount, const unsigned cardsCount);
@@ -55,6 +62,12 @@ void resetGameParams(Player*& players, size_t& currentPlayer,
 	unsigned& maxBet, bool& isTie);
 
 void readyPlayersForTie(Player*& players, const unsigned short playerCount,
-	unsigned short& inGame, const unsigned pot, char& playerAnswer);
+	unsigned short& inGame, const unsigned pot, char& playerAnswer,
+	unsigned& lastRaise, unsigned& maxBet, bool& isTie);
 
 unsigned countActiveOrNotAllInPlayers(const Player* players, const unsigned short playerCount);
+
+void playerAction(Player* players, const size_t currentPlayer,
+	const unsigned short playerCount, char& playerAnswer, unsigned& lastRaise,
+	unsigned& pot, unsigned short& inGame,
+	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance);
