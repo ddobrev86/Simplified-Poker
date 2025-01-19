@@ -28,7 +28,8 @@ void printPlayers(const Player* players, const unsigned short playerCount);
 void printPlayerInfo(const Player* players, const size_t currentPlayer,
 	const unsigned pot, const unsigned lastRaise, const unsigned maxBet);
 
-void showPlayerBalances(const Player* players, const unsigned short playerCount);
+void showPlayerBalances(const Player* players, const unsigned short playerCount,
+	const bool isTie);
 
 void printWinners(const Player* players, const unsigned short playerCount);
 
@@ -50,7 +51,10 @@ void resetPlayerStates(Player*& players, const unsigned short playerCount,
 
 void resetGameParams(Player*& players, size_t& currentPlayer,
 	const unsigned short playerCount, unsigned& lastRaise,
-	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet);
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, 
+	unsigned& maxBet, bool& isTie);
 
 void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame, const unsigned pot, char& playerAnswer);
+
+unsigned countActiveOrNotAllInPlayers(const Player* players, const unsigned short playerCount);

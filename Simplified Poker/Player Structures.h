@@ -18,7 +18,7 @@
 
 const unsigned short CARDS_PER_PLAYER = 3;
 const unsigned CHIP_VALUE = 10;
-const unsigned STARTING_CHIP_COUNT = 10;
+const unsigned STARTING_CHIP_COUNT = 100;
 
 struct Player
 {

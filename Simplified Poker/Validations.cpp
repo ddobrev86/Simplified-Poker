@@ -85,7 +85,8 @@ void askPlayerAction(const Player player, const unsigned maxBet,
 	minBalance = calculateMinPlayerBalance(players, playerCount);
 
 	bool canCall = (player.given < maxBet);
-	bool canRaise = (lastRaise + CHIP_VALUE <= minBalance);
+	bool canRaise = (lastRaise + CHIP_VALUE <= minBalance 
+		&& countActiveOrNotAllInPlayers(players, playerCount) > 1);
 
 	/*
 	array of chars, that stores the options that the player can choose from;
@@ -105,11 +106,21 @@ void askPlayerAction(const Player player, const unsigned maxBet,
 		{
 			std::cout << "\nPlayer " << playerIndx + 1 << " do you want "
 				"to fold or not (y/n): ";
-		}
 
-		std::cout << "\nPlayer " << playerIndx + 1 << " do you" <<
-			(canRaise ? " raise" : "") << (canCall ? " call" : "") << " or fold (" 
-			<< playerOptions << "): ";
+			askPlayerYesOrNo(playerAnswer);
+			if (playerAnswer == 'y')
+			{
+				playerAnswer = 'f';
+				break;
+			}
+		}
+		else
+		{
+			std::cout << "\nPlayer " << playerIndx + 1 << " do you" <<
+				(canRaise ? " raise" : "") << (canCall ? " call" : "") << " or fold ("
+				<< playerOptions << "): ";
+		}
+		
 
 		std::cin >> playerAnswer;
 

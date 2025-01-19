@@ -63,18 +63,40 @@ void printPlayerInfo(const Player* players, const size_t currentPlayer,
 
 }
 
-void showPlayerBalances(const Player* players, const unsigned short playerCount)
+void showPlayerBalances(const Player* players, const unsigned short playerCount,
+	const bool isTie)
 {
-	//std::cout << '\n';
+	if (!players)
+	{
+		return;
+	}
+
+	if (isTie)
+	{
+		std::cout << "IT'S A TIE\n";
+	}
 
 	size_t toBePrinted = playerCount;
 	const int PLAYERS_PER_ROW = 3;
 
-	for (size_t current = 0; current < playerCount;)
+	size_t current = 0;
+
+	while (current < playerCount)
 	{
 		for (size_t row = 0; row < PLAYERS_PER_ROW && row < toBePrinted; row++)
 		{
-			std::cout << "Player " << ++current << ": " << players[current - 1].chips << " ";
+			/*if (!players[current].isActive)
+			{
+				current++;
+				continue;
+			}*/
+
+			if (players[current].allIn)
+			{
+				std::cout << '*';
+			}
+			std::cout << "Player " << current + 1 << ": " << players[current].chips << " ";
+			current++;
 		}
 
 		toBePrinted -= PLAYERS_PER_ROW;
@@ -215,15 +237,17 @@ void resetPlayerStates(Player*& players, const unsigned short playerCount,
 		{
 			players[indx].isActive = true;
 			players[indx].given = 0;
-			players[indx].allIn = false;
 			inGame++;
 		}
+
+		players[indx].allIn = false;
 	}
 }
 
 void resetGameParams(Player*& players, size_t& currentPlayer,
 	const unsigned short playerCount, unsigned& lastRaise,
-	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet)
+	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, 
+	unsigned& maxBet, bool& isTie)
 {
 	inGame = 0;
 	pot = 0;
@@ -231,6 +255,7 @@ void resetGameParams(Player*& players, size_t& currentPlayer,
 	currentPlayer = 0;
 	lastPlayerToRaise = 0;
 	maxBet = 0;
+	isTie = false;
 	resetPlayerStates(players, playerCount, inGame);
 }
 
@@ -249,6 +274,7 @@ void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 			if (players[indx].allIn)
 			{
 				players[indx].chips += TIE_COMPENSATION;
+				players[indx].allIn = false;
 			}
 
 			players[indx].given = 0;
@@ -260,4 +286,23 @@ void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 				askPlayerToJoinTie(players[indx], indx, pot, inGame, playerAnswer);
 		}
 	}
+}
+
+unsigned countActiveOrNotAllInPlayers(const Player* players, const unsigned short playerCount)
+{
+	if (!players)
+	{
+		return 0;
+	}
+
+	unsigned count = 0;
+	for (size_t indx = 0; indx < playerCount; indx++)
+	{
+		if (players[indx].isActive && !players[indx].allIn)
+		{
+			count++;
+		}
+	}
+
+	return count;
 }

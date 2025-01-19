@@ -44,7 +44,7 @@ short sumCardValues(const Card* playerCards, size_t startIndex)
 		sum += playerCards[indx].type->value;
 	}
 
-	return (sum == 21 || sum == 14 ? THREE_SEVENS_POINTS : sum);
+	return (((sum == 21 && startIndex == 0) || sum == 14) ? THREE_SEVENS_POINTS : sum);
 }
 
 short countIdenticalCardTypes(const Card* playerCards, size_t startIndex)
@@ -143,7 +143,7 @@ unsigned calculateMinPlayerBalance(const Player* players, const unsigned short p
 	if (!players)
 		return 0;
 
-	unsigned min = CHIP_VALUE * STARTING_CHIP_COUNT;
+	unsigned min = playerCount * CHIP_VALUE * STARTING_CHIP_COUNT;
 
 	for (size_t indx = 0; indx < playerCount; indx++)
 	{
@@ -226,6 +226,11 @@ void call(Player& player, unsigned& maxBet, unsigned& pot)
 
 	player.chips -= toGive;
 	player.given += toGive;
+
+	if (player.chips == 0)
+	{
+		player.allIn = true;
+	}
 
 	pot += toGive;
 

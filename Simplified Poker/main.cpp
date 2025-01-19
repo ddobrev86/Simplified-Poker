@@ -66,7 +66,11 @@ int main()
 
 	size_t winnerIndx;
 
-	while (true)
+	bool isTie = false;
+
+	bool closeProgram = false;
+
+	while (!closeProgram)
 	{
 		printGameCommands();
 		std::cin >> gameCommand;
@@ -90,7 +94,7 @@ int main()
 						if (currentPlayer >= playerCount)
 							break;
 
-						if (!players[currentPlayer].isActive || players[currentPlayer].allIn)
+						if (!players[currentPlayer].isActive)
 						{
 							currentPlayer++;
 							currentPlayer %= playerCount;
@@ -98,16 +102,19 @@ int main()
 						}
 						system("cls");
 
-						showPlayerBalances(players, playerCount);
+						showPlayerBalances(players, playerCount, isTie);
 						printPlayerInfo(players, currentPlayer, pot, lastRaise, maxBet);
 						askPlayerToPrintDeck(players[currentPlayer], playerAnswer);
 
-						askPlayerAction(players[currentPlayer], maxBet, currentPlayer, 
-							playerAnswer, players, playerCount, lastRaise, minBalance);
-						playPlayerAction(players, currentPlayer, playerCount, 
-							playerAnswer, lastRaise, pot, inGame, 
-							lastPlayerToRaise, maxBet, minBalance);
-
+						if (!players[currentPlayer].allIn)
+						{
+							askPlayerAction(players[currentPlayer], maxBet, currentPlayer,
+								playerAnswer, players, playerCount, lastRaise, minBalance);
+							playPlayerAction(players, currentPlayer, playerCount,
+								playerAnswer, lastRaise, pot, inGame,
+								lastPlayerToRaise, maxBet, minBalance);
+						}
+						
 						if (inGame == 1)
 						{
 							break;
@@ -133,6 +140,7 @@ int main()
 						readyPlayersForTie(players, playerCount, inGame, pot / 2, playerAnswer);
 						lastRaise = 0;
 						maxBet = 0;
+						isTie = true;
 						continue;
 					}
 					else 
@@ -148,11 +156,12 @@ int main()
 					}
 
 					resetGameParams(players, currentPlayer, playerCount, lastRaise,
-						pot, inGame, lastPlayerToRaise, maxBet);
+						pot, inGame, lastPlayerToRaise, maxBet, isTie);
 
 					if (inGame == 1)
 					{
-						std::cout << "Player " << winnerIndx + 1 << " is the only player left and winner";
+						std::cout << "\nPlayer " << winnerIndx + 1 << 
+							" is the only player left and is the winner\n\n";
 						break;
 					}
 
@@ -163,6 +172,7 @@ int main()
 			case '2':
 				break;
 			case '3':
+				closeProgram = true;
 				break;
 			default:
 				std::cout << '\n' << "Please choose a correct game option" << '\n';
