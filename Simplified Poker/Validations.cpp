@@ -88,13 +88,10 @@ void askPlayerAction(const Player player, const unsigned maxBet,
 	bool canRaise = (lastRaise + CHIP_VALUE <= minBalance 
 		&& countActiveOrNotAllInPlayers(players, playerCount) > 1);
 
-	/*
-	array of chars, that stores the options that the player can choose from;
+	/* array of chars, that stores the options that the player can choose from;
 	2 * canRaise -> needed space for r/
 	2 * canCall -> needed space for c/
-	+2 -> player can fold(f) any time and one symbol for \0
-	*/
-
+	+2 -> player can fold(f) any time and one symbol for \0 */
 	size_t optionsSize = 2 * canRaise + 2 * canCall + 2;
 	char* playerOptions = new char[optionsSize];
 
@@ -182,4 +179,11 @@ void askPlayerToJoinTie(Player& player, const size_t indx,
 		player.given = 0;
 		inGame++;
 	}
+}
+
+void askToSaveGame(char& playerAnswer)
+{
+	std::cout << "Do you want to save the current game?(y/n): ";
+
+	askPlayerYesOrNo(playerAnswer);
 }

@@ -49,25 +49,9 @@ Card* deck = fillDeckWithCards(CARD_TYPES, SUITS, TYPES_COUNT, SUITS_COUNT, CARD
 int main()
 {
 	char gameCommand;
-	char playerAnswer;
 	unsigned short playerCount = 0;
 	Player* players = nullptr;
-
-	unsigned lastRaise = 0;
-	unsigned pot = 0;
-	unsigned maxBet = 0;
-	unsigned minBalance = 0;
-
-	size_t lastPlayerToRaise = 0;
-	size_t currentPlayer = 0;
 	unsigned short inGame;
-
-	unsigned winnerCount = 0;
-	unsigned maxPoints;
-
-	size_t winnerIndx;
-
-	bool isTie = false;
 
 	bool closeProgram = false;
 
@@ -82,62 +66,18 @@ int main()
 				inGame = playerCount;
 				players = new Player[playerCount];
 
-				do
-				{
-					shuffleDeck(CARDS_IN_DECK, deck);
-					dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
-
-					finalisePlayerDecks(players, playerCount, pot);
-
-					bettingPhase(players, currentPlayer, playerCount, playerAnswer, lastRaise, 
-						pot, inGame, lastPlayerToRaise, maxBet, minBalance, isTie);
-
-					winnerCount = 0;
-					maxPoints = getMaxPoints(players, playerCount);
-					getWinners(players, playerCount, maxPoints, winnerCount, winnerIndx);
-
-					system("cls");
-					printWinnersHeader(players, playerCount, pot, winnerCount);
-
-					if (winnerCount > 1)
-					{
-						readyPlayersForTie(players, playerCount, inGame, pot / 2, playerAnswer,
-							lastRaise, maxBet, isTie);
-						continue;
-					}
-					else 
-					{
-						players[winnerIndx].chips += pot;
-					}
-
-					playAgain(playerAnswer);
-
-					if (playerAnswer == 'n')
-					{
-						delete[] players;
-						players = nullptr;
-
-						break;
-					}
-
-					resetGameParams(players, currentPlayer, playerCount, lastRaise,
-						pot, inGame, lastPlayerToRaise, maxBet, isTie);
-
-					if (inGame == 1)
-					{
-						std::cout << "\nPlayer " << winnerIndx + 1 << " is the only player left and is the winner\n\n";
-						break;
-					}
-
-				} while (true);
-				
+				playGame(players, playerCount, deck, CARDS_IN_DECK, inGame);
 
 				break;
 			case '2':
-				if (getGameInfo(players, playerCount))
+				if (!getGameInfo(players, playerCount, inGame))
 				{
-
+					system("cls");
+					std::cout << "Cound not open file\n";
+					break;
 				}
+
+				playGame(players, playerCount, deck, CARDS_IN_DECK, inGame);
 
 				break;
 			case '3':

@@ -35,3 +35,5 @@ void playAgain(char& playerAnswer);
 
 void askPlayerToJoinTie(Player& player, const size_t indx, 
 	const unsigned pot, unsigned short& inGame, char& playerAnswer);
+
+void askToSaveGame(char& playerAnswer);

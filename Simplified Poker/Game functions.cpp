@@ -311,7 +311,6 @@ void getWinners(Player* players, const unsigned short playerCount,
 	}
 }
 
-
 void bettingPhase(Player* players, size_t& currentPlayer,
 	const unsigned short playerCount, char& playerAnswer, unsigned& lastRaise,
 	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet,
@@ -347,4 +346,92 @@ void bettingPhase(Player* players, size_t& currentPlayer,
 		currentPlayer %= playerCount;
 
 	} while (lastPlayerToRaise != currentPlayer);
+}
+
+void endOfGame(Player*& players, const unsigned short playerCount,
+	unsigned short& inGame, const unsigned pot, char& playerAnswer,
+	unsigned& lastRaise, unsigned& maxBet, bool& isTie, const unsigned winnerCount,
+	const size_t winnerIndx)
+{
+	if (winnerCount > 1)
+	{
+		readyPlayersForTie(players, playerCount, inGame, pot / 2, playerAnswer,
+			lastRaise, maxBet, isTie);
+	}
+	else
+	{
+		players[winnerIndx].chips += pot;
+	}
+}
+
+void playGame(Player* players, unsigned short& playerCount, 
+	Card* deck, const unsigned CARDS_IN_DECK, unsigned short inGame)
+{
+	if (!deck || !players)
+	{
+		return;
+	}
+
+	char playerAnswer;
+	unsigned lastRaise = 0, pot = 0, maxBet = 0, minBalance = 0;
+
+	size_t lastPlayerToRaise = 0, currentPlayer = 0;
+
+	unsigned maxPoints, winnerCount = 0;
+	size_t winnerIndx;
+
+	bool isTie = false;
+
+	do
+	{
+		shuffleDeck(CARDS_IN_DECK, deck);
+		dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
+
+		finalisePlayerDecks(players, playerCount, pot);
+
+		bettingPhase(players, currentPlayer, playerCount, playerAnswer, lastRaise,
+			pot, inGame, lastPlayerToRaise, maxBet, minBalance, isTie);
+
+		winnerCount = 0;
+		maxPoints = getMaxPoints(players, playerCount);
+		getWinners(players, playerCount, maxPoints, winnerCount, winnerIndx);
+
+		system("cls");
+		printWinnersHeader(players, playerCount, pot, winnerCount);
+
+		isTie = false;
+		endOfGame(players, playerCount, inGame, pot, playerAnswer, lastRaise, 
+			maxBet, isTie, winnerCount, winnerIndx);
+
+		if (isTie)
+			continue;
+
+		playAgain(playerAnswer);
+
+		if (playerAnswer == 'n')
+		{
+			system("cls");	
+			
+			askToSaveGame(playerAnswer);
+			if (playerAnswer == 'y')
+			{
+				saveGameInfo(players, playerCount);
+			}
+
+			delete[] players;
+			players = nullptr;
+
+			break;
+		}
+
+		resetGameParams(players, currentPlayer, playerCount, lastRaise,
+			pot, inGame, lastPlayerToRaise, maxBet, isTie);
+
+		if (inGame == 1)
+		{
+			std::cout << "\nPlayer " << winnerIndx + 1 << " is the only player left and is the winner\n\n";
+			break;
+		}
+
+	} while (true);
 }

@@ -6,7 +6,7 @@ const char* FILE_NAME = "game info.txt";
 
 char BUFFER[1024]{};
 
-void enterGameInfo(const Player* players, const unsigned short playerCount)
+void saveGameInfo(const Player* players, const unsigned short playerCount)
 {
 	if (!players)
 	{
@@ -28,13 +28,12 @@ void enterGameInfo(const Player* players, const unsigned short playerCount)
 	ofs.close();
 }
 
-bool getGameInfo(Player* players, unsigned short& playerCount)
+bool getGameInfo(Player*& players, unsigned short& playerCount, unsigned short& inGame)
 {
 
 	std::ifstream ifs(FILE_NAME);
 	if (!ifs.is_open())
 	{
-		std::cout << "Cound not open file";
 		return false;
 	}
 
@@ -44,6 +43,9 @@ bool getGameInfo(Player* players, unsigned short& playerCount)
 	for (size_t indx = 0; indx < playerCount; indx++)
 	{
 		ifs >> players[indx].chips;
+
+		if (players[indx].chips > 0)
+			inGame++;
 	}
 
 	ifs.close();
