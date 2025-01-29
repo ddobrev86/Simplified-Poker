@@ -18,6 +18,10 @@
 #include "Initialisation Functions.h"
 #include "Game functions.h"
 
+bool checkNullptr(const Player* players, bool& gameState);
+
+bool checkNullptr(const Card* deck, bool& gameState);
+
 void askPlayerYesOrNo(char& playerAnswer);
 
 void enterPlayerCount(unsigned short& playerCount);
@@ -25,9 +29,9 @@ void enterPlayerCount(unsigned short& playerCount);
 void askPlayerAction(const Player player, const unsigned maxBet,
 	const size_t playerIndx, char& playerAnswer, const Player* players,
 	const unsigned short playerCount, const unsigned lastRaise,
-	unsigned& minBalance);
+	unsigned& minBalance, bool& gameState);
 
-void askPlayerToPrintDeck(const Player player, char& playerAnswer);
+void askPlayerToPrintDeck(const Player player, char& playerAnswer, bool& gameState);
 
 void askToGoAllIn(char& playerAnswer);
 

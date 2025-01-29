@@ -10,12 +10,14 @@ void saveGameInfo(const Player* players, const unsigned short playerCount)
 {
 	if (!players)
 	{
+		std::cout << "Could not save current game\n";
 		return;
 	}
 
 	std::ofstream ofs(FILE_NAME);
 	if (!ofs.is_open())
 	{
+		std::cout << "Could not save current game\n";
 		return;
 	}
 
@@ -26,6 +28,7 @@ void saveGameInfo(const Player* players, const unsigned short playerCount)
 	}
 
 	ofs.close();
+	std::cout << "Game saved successfully\n";
 }
 
 bool getGameInfo(Player*& players, unsigned short& playerCount, unsigned short& inGame)

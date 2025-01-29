@@ -21,53 +21,55 @@
 
 void printGameCommands();
 
-void printDeck(const Card* deck, const unsigned cardsCount, const char separator);
+void printDeck(const Card* deck, const unsigned cardsCount, const char separator, bool& gameState);
 
-void printPlayers(const Player* players, const unsigned short playerCount);
+void printPlayers(const Player* players, const unsigned short playerCount, bool& gameState);
 
 void printPlayerInfo(const Player* players, const size_t currentPlayer,
-	const unsigned pot, const unsigned lastRaise, const unsigned maxBet);
+	const unsigned pot, const unsigned lastRaise, const unsigned maxBet, bool& gameState);
 
 void showPlayerBalances(const Player* players, const unsigned short playerCount,
-	const bool isTie);
+	const bool isTie, bool& gameState);
 
 void printInfoHeader(const Player* players, const unsigned short playerCount, const size_t currentPlayer,
 	const unsigned pot, const unsigned lastRaise, const unsigned maxBet,
-	const bool isTie, char& playerAnswer);
+	const bool isTie, char& playerAnswer, bool& gameState);
 
-void printWinners(const Player* players, const unsigned short playerCount);
+void printWinners(const Player* players, const unsigned short playerCount, bool& gameState);
 
 void printWinnersHeader(const Player* players, const unsigned short playerCount,
-	const unsigned pot, size_t& winnerCount);
+	const unsigned pot, size_t& winnerCount, bool& gameState);
 
 Card* fillDeckWithCards(const CardType* cardTypes, const CardSuit* cardSuites,
 	const unsigned typesCount, const unsigned suitsCount, const unsigned cardsCount);
 
 void swapCards(Card& firstCard, Card& secondCard);
 
-void shuffleDeck(const unsigned cardsInDeck, Card* deck);
+void shuffleDeck(const unsigned cardsInDeck, Card* deck, bool& gameState);
 
 void dealCardsToPlayers(const unsigned short playerCount, const unsigned short cardsPerPlayer, 
-	Card* deck, Player* players);
+	Card* deck, Player* players, bool& gameState);
 
 void finalisePlayerDecks(Player* players, const unsigned short playerCount, 
-	unsigned& pot);
+	unsigned& pot, bool& gameState);
 
 void resetPlayerStates(Player*& players, const unsigned short playerCount,
-	unsigned short& inGame);
+	unsigned short& inGame, bool& gameState);
 
 void resetGameParams(Player*& players, size_t& currentPlayer,
 	const unsigned short playerCount, unsigned& lastRaise,
 	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, 
-	unsigned& maxBet, bool& isTie);
+	unsigned& maxBet, bool& isTie, bool& gameState);
 
 void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame, const unsigned pot, char& playerAnswer,
-	unsigned& lastRaise, unsigned& maxBet, bool& isTie);
+	unsigned& lastRaise, unsigned& maxBet, bool& isTie, bool& gameState);
 
-unsigned countActiveOrNotAllInPlayers(const Player* players, const unsigned short playerCount);
+unsigned countActiveOrNotAllInPlayers(const Player* players, const unsigned short playerCount,
+	bool& gameState);
 
 void playerAction(Player* players, const size_t currentPlayer,
 	const unsigned short playerCount, char& playerAnswer, unsigned& lastRaise,
 	unsigned& pot, unsigned short& inGame,
-	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance);
+	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance,
+	bool& gameState);

@@ -265,10 +265,12 @@ void playPlayerAction(Player* players, const size_t currentPlayer,
 	}
 }
 
-unsigned getMaxPoints(const Player* players, const unsigned short playerCount)
+unsigned getMaxPoints(const Player* players, const unsigned short playerCount, bool& gameState)
 {
 	if (!players)
 	{
+		std::cout << "Could not load needed info";
+		gameState = false;
 		return 0;
 	}
 
@@ -287,10 +289,12 @@ unsigned getMaxPoints(const Player* players, const unsigned short playerCount)
 
 void getWinners(Player* players, const unsigned short playerCount, 
 	const unsigned maxPoints,
-	unsigned& winnerCount, size_t& winnerIndx)
+	unsigned& winnerCount, size_t& winnerIndx, bool& gameState)
 {
 	if (!players)
 	{
+		std::cout << "Could not load needed info\n";
+		gameState = false;
 		return;
 	}
 
@@ -314,8 +318,13 @@ void getWinners(Player* players, const unsigned short playerCount,
 void bettingPhase(Player* players, size_t& currentPlayer,
 	const unsigned short playerCount, char& playerAnswer, unsigned& lastRaise,
 	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet,
-	unsigned& minBalance, bool& isTie)
+	unsigned& minBalance, bool& isTie, bool& gameState)
 {
+	if (checkNullptr(players, gameState))
+	{
+		return;
+	}
+
 	do
 	{
 		//compiler throws a warning for players[currentPlayer]
@@ -331,12 +340,12 @@ void bettingPhase(Player* players, size_t& currentPlayer,
 		system("cls");
 
 		printInfoHeader(players, playerCount, currentPlayer, pot,
-			lastRaise, maxBet, isTie, playerAnswer);
+			lastRaise, maxBet, isTie, playerAnswer, gameState);
 
 		if (!players[currentPlayer].allIn)
 		{
 			playerAction(players, currentPlayer, playerCount, playerAnswer, lastRaise,
-				pot, inGame, lastPlayerToRaise, maxBet, minBalance);
+				pot, inGame, lastPlayerToRaise, maxBet, minBalance, gameState);
 		}
 
 		if (inGame == 1)
@@ -351,12 +360,17 @@ void bettingPhase(Player* players, size_t& currentPlayer,
 void endOfGame(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame, const unsigned pot, char& playerAnswer,
 	unsigned& lastRaise, unsigned& maxBet, bool& isTie, const unsigned winnerCount,
-	const size_t winnerIndx)
+	const size_t winnerIndx, bool& gameState)
 {
+	if (checkNullptr(players, gameState))
+	{
+		return;
+	}
+
 	if (winnerCount > 1)
 	{
 		readyPlayersForTie(players, playerCount, inGame, pot / 2, playerAnswer,
-			lastRaise, maxBet, isTie);
+			lastRaise, maxBet, isTie, gameState);
 	}
 	else
 	{
@@ -369,6 +383,7 @@ void playGame(Player* players, unsigned short& playerCount,
 {
 	if (!deck || !players)
 	{
+		std::cout << "Could not load needed info\n";
 		return;
 	}
 
@@ -381,27 +396,28 @@ void playGame(Player* players, unsigned short& playerCount,
 	size_t winnerIndx;
 
 	bool isTie = false;
+	bool gameState = true;
 
 	do
 	{
-		shuffleDeck(CARDS_IN_DECK, deck);
-		dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players);
+		shuffleDeck(CARDS_IN_DECK, deck, gameState);
+		dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players, gameState);
 
-		finalisePlayerDecks(players, playerCount, pot);
+		finalisePlayerDecks(players, playerCount, pot, gameState);
 
 		bettingPhase(players, currentPlayer, playerCount, playerAnswer, lastRaise,
-			pot, inGame, lastPlayerToRaise, maxBet, minBalance, isTie);
+			pot, inGame, lastPlayerToRaise, maxBet, minBalance, isTie, gameState);
 
 		winnerCount = 0;
-		maxPoints = getMaxPoints(players, playerCount);
-		getWinners(players, playerCount, maxPoints, winnerCount, winnerIndx);
+		maxPoints = getMaxPoints(players, playerCount, gameState);
+		getWinners(players, playerCount, maxPoints, winnerCount, winnerIndx, gameState);
 
 		system("cls");
-		printWinnersHeader(players, playerCount, pot, winnerCount);
+		printWinnersHeader(players, playerCount, pot, winnerCount, gameState);
 
 		isTie = false;
 		endOfGame(players, playerCount, inGame, pot, playerAnswer, lastRaise, 
-			maxBet, isTie, winnerCount, winnerIndx);
+			maxBet, isTie, winnerCount, winnerIndx, gameState);
 
 		if (isTie)
 			continue;
@@ -415,6 +431,7 @@ void playGame(Player* players, unsigned short& playerCount,
 			askToSaveGame(playerAnswer);
 			if (playerAnswer == 'y')
 			{
+				system("cls");
 				saveGameInfo(players, playerCount);
 			}
 
@@ -425,7 +442,7 @@ void playGame(Player* players, unsigned short& playerCount,
 		}
 
 		resetGameParams(players, currentPlayer, playerCount, lastRaise,
-			pot, inGame, lastPlayerToRaise, maxBet, isTie);
+			pot, inGame, lastPlayerToRaise, maxBet, isTie, gameState);
 
 		if (inGame == 1)
 		{

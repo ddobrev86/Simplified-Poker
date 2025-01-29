@@ -73,7 +73,7 @@ int main()
 				if (!getGameInfo(players, playerCount, inGame))
 				{
 					system("cls");
-					std::cout << "Cound not open file\n";
+					std::cout << "Cound not load game\n";
 					break;
 				}
 
@@ -89,8 +89,6 @@ int main()
 		}
 
 	}
-
-	//printPlayers(players, playerCount);
 
 	//--------------------------------------
 	delete[] deck;

@@ -46,18 +46,18 @@ void playPlayerAction(Player* players, const size_t currentPlayer, const unsigne
 	const char playerAnswer, unsigned& lastRaise, unsigned& pot, unsigned short& inGame,
 	size_t& lastPlayerToRaise, unsigned& maxBet, const unsigned minBalance);
 
-unsigned getMaxPoints(const Player* players, const unsigned short playerCount);
+unsigned getMaxPoints(const Player* players, const unsigned short playerCount, bool& gameState);
 
 void getWinners(Player* players, const unsigned short playerCount, const unsigned maxPoints,
-	unsigned& winnerCount, size_t& winnerIndx);
+	unsigned& winnerCount, size_t& winnerIndx, bool& gameState);
 
 void bettingPhase(Player* players, size_t& currentPlayer, const unsigned short playerCount, 
 	char& playerAnswer, unsigned& lastRaise, unsigned& pot, unsigned short& inGame, 
-	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance, bool& isTie);
+	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance, bool& isTie, bool& gameState);
 
 void endOfGame(Player*& players, const unsigned short playerCount, unsigned short& inGame, 
 	const unsigned pot, char& playerAnswer, unsigned& lastRaise, unsigned& maxBet, 
-	bool& isTie, const unsigned winnerCount, const size_t winnerIndx);
+	bool& isTie, const unsigned winnerCount, const size_t winnerIndx, bool& gameState);
 
 void playGame(Player* players, unsigned short& playerCount,
 	Card* deck, const unsigned CARDS_IN_DECK, unsigned short inGame);

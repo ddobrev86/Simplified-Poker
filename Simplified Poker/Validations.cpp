@@ -16,6 +16,28 @@
 #include <iostream>
 #include "Validations.h"
 
+bool checkNullptr(const Player* players, bool& gameState)
+{
+	if (!players)
+	{
+		std::cout << "Could not load needed info\n";
+		gameState = false;
+	}
+
+	return !gameState;
+}
+
+bool checkNullptr(const Card* deck, bool& gameState)
+{
+	if (!deck)
+	{
+		std::cout << "Could not load needed info\n";
+		gameState = false;
+	}
+
+	return !gameState;
+}
+
 void askPlayerYesOrNo(char& playerAnswer)
 {
 	do
@@ -74,7 +96,7 @@ void fillPlayerOptions(char* playerOptions, const size_t optionsSize,
 void askPlayerAction(const Player player, const unsigned maxBet, 
 	const size_t playerIndx, char& playerAnswer, const Player* players, 
 	const unsigned short playerCount, const unsigned lastRaise, 
-	unsigned& minBalance)
+	unsigned& minBalance, bool& gameState)
 {
 	if (maxBet < 0)
 	{
@@ -86,7 +108,7 @@ void askPlayerAction(const Player player, const unsigned maxBet,
 
 	bool canCall = (player.given < maxBet);
 	bool canRaise = (lastRaise + CHIP_VALUE <= minBalance 
-		&& countActiveOrNotAllInPlayers(players, playerCount) > 1);
+		&& countActiveOrNotAllInPlayers(players, playerCount, gameState) > 1);
 
 	/* array of chars, that stores the options that the player can choose from;
 	2 * canRaise -> needed space for r/
@@ -135,7 +157,7 @@ void askPlayerAction(const Player player, const unsigned maxBet,
 
 }
 
-void askPlayerToPrintDeck(const Player player, char& playerAnswer)
+void askPlayerToPrintDeck(const Player player, char& playerAnswer, bool& gameState)
 {
 	std::cout << "\nDo you want to see your cards and points?(y/n): ";
 
@@ -143,7 +165,7 @@ void askPlayerToPrintDeck(const Player player, char& playerAnswer)
 
 	if (playerAnswer == 'y')
 	{
-		printDeck(player.cards, CARDS_PER_PLAYER, ' ');
+		printDeck(player.cards, CARDS_PER_PLAYER, ' ', gameState);
 		std::cout << " " << player.points << '\n';
 	}
 		
