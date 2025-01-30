@@ -38,6 +38,28 @@ bool checkNullptr(const Card* deck, bool& gameState)
 	return !gameState;
 }
 
+bool validPlayerCount(const unsigned short playerCount, bool& gameState)
+{
+	if (!(2 <= playerCount && playerCount <= 9))
+	{
+		std::cout << "Invalid input\n";
+		gameState = false;
+	}
+
+	return gameState;
+}
+
+bool validStartIndex(const size_t startIndex, bool& gameState)
+{
+	if (startIndex < 0 || startIndex > 1)
+	{
+		std::cout << "Invalid input\n";
+		gameState = false;
+	}
+
+	return gameState;
+}
+
 void askPlayerYesOrNo(char& playerAnswer)
 {
 	do
@@ -58,7 +80,7 @@ void enterPlayerCount(unsigned short& playerCount)
 	{
 		std::cout << '\n' << "How many players are going to play (2-9)?: ";
 		std::cin >> playerCount;
-		if (playerCount >= 2 && playerCount <= 9)
+		if (2 <= playerCount && playerCount <= 9)
 			break;
 
 		system("cls");
@@ -104,7 +126,7 @@ void askPlayerAction(const Player player, const unsigned maxBet,
 		return;
 	}
 
-	minBalance = calculateMinPlayerBalance(players, playerCount);
+	minBalance = calculateMinPlayerBalance(players, playerCount, gameState);
 
 	bool canCall = (player.given < maxBet);
 	bool canRaise = (lastRaise + CHIP_VALUE <= minBalance 
@@ -197,7 +219,7 @@ void askPlayerToJoinTie(Player& player, const size_t indx,
 	{
 		player.chips -= pot;
 		player.isActive = true;
-		player.allIn = false;
+		player.allIn = (player.chips == 0 ? true : false);
 		player.given = 0;
 		inGame++;
 	}

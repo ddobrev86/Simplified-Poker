@@ -67,9 +67,3 @@ void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 
 unsigned countActiveOrNotAllInPlayers(const Player* players, const unsigned short playerCount,
 	bool& gameState);
-
-void playerAction(Player* players, const size_t currentPlayer,
-	const unsigned short playerCount, char& playerAnswer, unsigned& lastRaise,
-	unsigned& pot, unsigned short& inGame,
-	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance,
-	bool& gameState);

@@ -43,7 +43,7 @@ void printDeck(const Card* deck, const unsigned cardsCount, const char separator
 
 void printPlayers(const Player* players, const unsigned short playerCount, bool& gameState)
 {
-	if (checkNullptr(players, gameState))
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
 	}
@@ -51,7 +51,7 @@ void printPlayers(const Player* players, const unsigned short playerCount, bool&
 	for (size_t i = 0; i < playerCount; i++)
 	{
 		printDeck(players[i].cards, 3, '\n', gameState);
-		std::cout << '\n' << calculatePlayerPoints(players[i].cards) << '\n' << '\n';
+		std::cout << '\n' << calculatePlayerPoints(players[i].cards, gameState) << '\n' << '\n';
 	}
 }
 
@@ -74,7 +74,7 @@ void printPlayerInfo(const Player* players, const size_t currentPlayer,
 void showPlayerBalances(const Player* players, const unsigned short playerCount,
 	const bool isTie, bool& gameState)
 {
-	if (checkNullptr(players, gameState))
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
 	}
@@ -93,11 +93,11 @@ void showPlayerBalances(const Player* players, const unsigned short playerCount,
 	{
 		for (size_t row = 0; row < PLAYERS_PER_ROW && row < toBePrinted; row++)
 		{
-			/*if (!players[current].isActive)
+			if (isTie && !players[current].isActive)
 			{
 				current++;
 				continue;
-			}*/
+			}
 
 			if (players[current].allIn)
 			{
@@ -124,7 +124,7 @@ void printInfoHeader(const Player* players, const unsigned short playerCount, co
 
 void printWinners(const Player* players, const unsigned short playerCount, bool& gameState)
 {
-	if (checkNullptr(players, gameState))
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
 	}
@@ -143,7 +143,7 @@ void printWinners(const Player* players, const unsigned short playerCount, bool&
 void printWinnersHeader(const Player* players, const unsigned short playerCount, 
 	const unsigned pot, size_t& winnerCount, bool& gameState)
 {
-	if (checkNullptr(players, gameState))
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
 	}
@@ -188,14 +188,7 @@ void swapCards(Card& firstCard, Card& secondCard)
 
 void shuffleDeck(const unsigned cardsInDeck, Card* deck, bool& gameState)
 {
-	/*if (!deck || cardsInDeck < 0)
-	{
-		std::cout << "Could not load needed info\n";
-		gameState = false;
-		return;
-	}*/
-
-	if (checkNullptr(deck, gameState))
+	if (checkNullptr(deck, gameState) || cardsInDeck < 0)
 	{
 		return;
 	}
@@ -214,7 +207,7 @@ void shuffleDeck(const unsigned cardsInDeck, Card* deck, bool& gameState)
 void dealCardsToPlayers(const unsigned short playerCount, const unsigned short cardsPerPlayer,
 	Card* deck, Player* players, bool& gameState)
 {
-	if (checkNullptr(deck, gameState) || checkNullptr(players, gameState))
+	if (checkNullptr(deck, gameState) || checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
 	}
@@ -235,7 +228,7 @@ void dealCardsToPlayers(const unsigned short playerCount, const unsigned short c
 void finalisePlayerDecks(Player* players, const unsigned short playerCount, 
 	unsigned& pot, bool& gameState)
 {
-	if (checkNullptr(players, gameState))
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
 	}
@@ -245,10 +238,10 @@ void finalisePlayerDecks(Player* players, const unsigned short playerCount,
 		if (players[playerIndx].isActive)
 		{
 			orderPlayerCards(players[playerIndx]);
-			players[playerIndx].points = calculatePlayerPoints(players[playerIndx].cards);
+			players[playerIndx].points = calculatePlayerPoints(players[playerIndx].cards, gameState);
 
 
-			if (players[playerIndx].chips <= CHIP_VALUE)
+			if (players[playerIndx].chips <= CHIP_VALUE && players[playerIndx].chips > 0)
 			{
 				players[playerIndx].chips = 0;
 				players[playerIndx].allIn = true;
@@ -266,7 +259,7 @@ void finalisePlayerDecks(Player* players, const unsigned short playerCount,
 void resetPlayerStates(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame, bool& gameState)
 {
-	if (checkNullptr(players, gameState))
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
 	}
@@ -303,7 +296,7 @@ void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 	unsigned short& inGame, const unsigned pot, char& playerAnswer,
 	unsigned& lastRaise, unsigned& maxBet, bool& isTie, bool& gameState)
 {
-	if (checkNullptr(players, gameState))
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
 	}
@@ -327,7 +320,7 @@ void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 		}
 		else
 		{
-			if(players[indx].chips > 0)
+			if(players[indx].chips >= pot)
 				askPlayerToJoinTie(players[indx], indx, pot, inGame, playerAnswer);
 		}
 	}
@@ -336,7 +329,7 @@ void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 unsigned countActiveOrNotAllInPlayers(const Player* players, const unsigned short playerCount, 
 	bool& gameState)
 {
-	if (checkNullptr(players, gameState))
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return 0;
 	}
@@ -351,20 +344,4 @@ unsigned countActiveOrNotAllInPlayers(const Player* players, const unsigned shor
 	}
 
 	return count;
-}
-
-void playerAction(Player* players, const size_t currentPlayer,
-	const unsigned short playerCount, char& playerAnswer, unsigned& lastRaise,
-	unsigned& pot, unsigned short& inGame,
-	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance, bool& gameState)
-{
-	if (checkNullptr(players, gameState))
-	{
-		return;
-	}
-
-	askPlayerAction(players[currentPlayer], maxBet, currentPlayer, playerAnswer, 
-		players, playerCount, lastRaise, minBalance, gameState);
-	playPlayerAction(players, currentPlayer, playerCount, playerAnswer, lastRaise, 
-		pot, inGame, lastPlayerToRaise, maxBet, minBalance);
 }

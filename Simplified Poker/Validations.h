@@ -22,6 +22,10 @@ bool checkNullptr(const Player* players, bool& gameState);
 
 bool checkNullptr(const Card* deck, bool& gameState);
 
+bool validPlayerCount(const unsigned short playerCount, bool& gameState);
+
+bool validStartIndex(const size_t startIndex, bool& gameState);
+
 void askPlayerYesOrNo(char& playerAnswer);
 
 void enterPlayerCount(unsigned short& playerCount);

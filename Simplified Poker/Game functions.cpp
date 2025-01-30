@@ -33,9 +33,9 @@ bool isSevenOfClubs(const Card card)
 	return card.type->value == 7 && card.suit->name == 'C';
 }
 
-short sumCardValues(const Card* playerCards, size_t startIndex)
+short sumCardValues(const Card* playerCards, size_t startIndex, bool& gameState)
 {
-	if (!playerCards || startIndex < 0 || startIndex > 1)
+	if (checkNullptr(playerCards, gameState) || !validStartIndex(startIndex, gameState))
 		return -1;
 
 	short sum = 0;
@@ -47,9 +47,9 @@ short sumCardValues(const Card* playerCards, size_t startIndex)
 	return (((sum == 21 && startIndex == 0) || sum == 14) ? THREE_SEVENS_POINTS : sum);
 }
 
-short countIdenticalCardTypes(const Card* playerCards, size_t startIndex)
+short countIdenticalCardTypes(const Card* playerCards, size_t startIndex, bool& gameState)
 {
-	if (!playerCards || startIndex < 0 || startIndex > 1)
+	if (checkNullptr(playerCards, gameState) || !validStartIndex(startIndex, gameState))
 		return -1;
 
 	size_t endIndex = startIndex + 1;
@@ -72,9 +72,9 @@ short countIdenticalCardTypes(const Card* playerCards, size_t startIndex)
 	return count;
 }
 
-short countIdenticalCardSuits(const Card* playerCards, size_t startIndex)
+short countIdenticalCardSuits(const Card* playerCards, size_t startIndex, bool& gameState)
 {
-	if (!playerCards || startIndex < 0 || startIndex > 1)
+	if (checkNullptr(playerCards, gameState) || !validStartIndex(startIndex, gameState))
 		return -1;
 
 	size_t endIndex = startIndex + 1;
@@ -97,9 +97,9 @@ short countIdenticalCardSuits(const Card* playerCards, size_t startIndex)
 	return count;
 }
 
-unsigned short calculatePlayerPoints(const Card* playerCards)
+unsigned short calculatePlayerPoints(const Card* playerCards, bool& gameState)
 {
-	if (!playerCards)
+	if (checkNullptr(playerCards, gameState))
 		return 0;
 
 	bool playerHasSevenOfClubs = isSevenOfClubs(playerCards[0]);
@@ -109,15 +109,20 @@ unsigned short calculatePlayerPoints(const Card* playerCards)
 	unsigned short points = 0;
 	unsigned short currentPoints = 0;
 
-	identicalTypes = countIdenticalCardTypes(playerCards, playerHasSevenOfClubs) + playerHasSevenOfClubs;
-	identicalSuits = countIdenticalCardSuits(playerCards, playerHasSevenOfClubs) + playerHasSevenOfClubs;
+	identicalTypes = countIdenticalCardTypes(playerCards, playerHasSevenOfClubs, gameState) + playerHasSevenOfClubs;
+	identicalSuits = countIdenticalCardSuits(playerCards, playerHasSevenOfClubs, gameState) + playerHasSevenOfClubs;
+	if (!gameState)
+		return 0;
 
 	bool hasTwoSevens = (identicalTypes && playerCards[1].type->value == 7);
 	bool hasTwoAces = (playerCards[1].type->value == 11 && identicalTypes);
 
 	if (identicalTypes > 1 || identicalSuits > 1)
 	{
-		points = sumCardValues(playerCards, playerHasSevenOfClubs);
+		points = sumCardValues(playerCards, playerHasSevenOfClubs, gameState);
+		if (!gameState)
+			return 0;
+
 		hasTwoSevens = false;
 	}
 	else if (hasTwoSevens)
@@ -139,9 +144,9 @@ unsigned short calculatePlayerPoints(const Card* playerCards)
 	return points;
 }
 
-unsigned calculateMinPlayerBalance(const Player* players, const unsigned short playerCount)
+unsigned calculateMinPlayerBalance(const Player* players, const unsigned short playerCount, bool& gameState)
 {
-	if (!players)
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 		return 0;
 
 	unsigned min = playerCount * CHIP_VALUE * STARTING_CHIP_COUNT;
@@ -157,11 +162,10 @@ unsigned calculateMinPlayerBalance(const Player* players, const unsigned short p
 	return min;
 }
 
-void raise(Player& player, const Player* allPlayers,
-	const unsigned short playerCount, unsigned& lastRaise, 
-	unsigned& pot, unsigned& maxBet, const unsigned minBalance)
+void raise(Player& player, const Player* allPlayers, const unsigned short playerCount, 
+	unsigned& lastRaise, unsigned& pot, unsigned& maxBet, const unsigned minBalance, bool& gameState)
 {
-	if (!allPlayers)
+	if (checkNullptr(allPlayers, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
 	}
@@ -242,16 +246,20 @@ void fold(Player& player)
 	player.isActive = false;
 }
 
-void playPlayerAction(Player* players, const size_t currentPlayer, 
-	const unsigned short playerCount, const char playerAnswer, unsigned& lastRaise,
-	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet,
-	const unsigned minBalance)
+void playPlayerAction(Player* players, const size_t currentPlayer, const unsigned short playerCount, 
+	const char playerAnswer, unsigned& lastRaise, unsigned& pot, unsigned short& inGame, 
+	size_t& lastPlayerToRaise, unsigned& maxBet, const unsigned minBalance, bool& gameState)
 {
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
+	{
+		return;
+	}
+
 	switch (playerAnswer)
 	{
 		case 'r':
 			raise(players[currentPlayer], players, playerCount, 
-				lastRaise, pot, maxBet, minBalance);
+				lastRaise, pot, maxBet, minBalance, gameState);
 
 			lastPlayerToRaise = currentPlayer;
 			break;
@@ -265,12 +273,25 @@ void playPlayerAction(Player* players, const size_t currentPlayer,
 	}
 }
 
+void playerAction(Player* players, const size_t currentPlayer, const unsigned short playerCount, 
+	char& playerAnswer, unsigned& lastRaise, unsigned& pot, unsigned short& inGame,
+	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance, bool& gameState)
+{
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
+	{
+		return;
+	}
+
+	askPlayerAction(players[currentPlayer], maxBet, currentPlayer, playerAnswer,
+		players, playerCount, lastRaise, minBalance, gameState);
+	playPlayerAction(players, currentPlayer, playerCount, playerAnswer, lastRaise,
+		pot, inGame, lastPlayerToRaise, maxBet, minBalance, gameState);
+}
+
 unsigned getMaxPoints(const Player* players, const unsigned short playerCount, bool& gameState)
 {
-	if (!players)
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
-		std::cout << "Could not load needed info";
-		gameState = false;
 		return 0;
 	}
 
@@ -287,14 +308,11 @@ unsigned getMaxPoints(const Player* players, const unsigned short playerCount, b
 	return maxPoints;
 }
 
-void getWinners(Player* players, const unsigned short playerCount, 
-	const unsigned maxPoints,
+void getWinners(Player* players, const unsigned short playerCount, const unsigned maxPoints, 
 	unsigned& winnerCount, size_t& winnerIndx, bool& gameState)
 {
-	if (!players)
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
-		std::cout << "Could not load needed info\n";
-		gameState = false;
 		return;
 	}
 
@@ -315,12 +333,11 @@ void getWinners(Player* players, const unsigned short playerCount,
 	}
 }
 
-void bettingPhase(Player* players, size_t& currentPlayer,
-	const unsigned short playerCount, char& playerAnswer, unsigned& lastRaise,
-	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, unsigned& maxBet,
-	unsigned& minBalance, bool& isTie, bool& gameState)
+void bettingPhase(Player* players, size_t& currentPlayer, const unsigned short playerCount, 
+	char& playerAnswer, unsigned& lastRaise, unsigned& pot, unsigned short& inGame, 
+	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance, bool& isTie, bool& gameState)
 {
-	if (checkNullptr(players, gameState))
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
 	}
@@ -357,12 +374,11 @@ void bettingPhase(Player* players, size_t& currentPlayer,
 	} while (lastPlayerToRaise != currentPlayer);
 }
 
-void endOfGame(Player*& players, const unsigned short playerCount,
-	unsigned short& inGame, const unsigned pot, char& playerAnswer,
-	unsigned& lastRaise, unsigned& maxBet, bool& isTie, const unsigned winnerCount,
-	const size_t winnerIndx, bool& gameState)
+void endOfGame(Player*& players, const unsigned short playerCount, unsigned short& inGame, 
+	const unsigned pot, char& playerAnswer, unsigned& lastRaise, unsigned& maxBet, 
+	bool& isTie, const unsigned winnerCount, const size_t winnerIndx, bool& gameState)
 {
-	if (checkNullptr(players, gameState))
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
 	}
@@ -381,43 +397,54 @@ void endOfGame(Player*& players, const unsigned short playerCount,
 void playGame(Player* players, unsigned short& playerCount, 
 	Card* deck, const unsigned CARDS_IN_DECK, unsigned short inGame)
 {
-	if (!deck || !players)
+	bool gameState = true;
+	if (checkNullptr(deck, gameState) || checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
-		std::cout << "Could not load needed info\n";
 		return;
 	}
 
 	char playerAnswer;
 	unsigned lastRaise = 0, pot = 0, maxBet = 0, minBalance = 0;
-
 	size_t lastPlayerToRaise = 0, currentPlayer = 0;
-
 	unsigned maxPoints, winnerCount = 0;
 	size_t winnerIndx;
-
 	bool isTie = false;
-	bool gameState = true;
 
 	do
 	{
 		shuffleDeck(CARDS_IN_DECK, deck, gameState);
+		if (!gameState)
+			break;
+
 		dealCardsToPlayers(playerCount, CARDS_PER_PLAYER, deck, players, gameState);
+		if (!gameState)
+			break;
 
 		finalisePlayerDecks(players, playerCount, pot, gameState);
+		if (!gameState)
+			break;
 
 		bettingPhase(players, currentPlayer, playerCount, playerAnswer, lastRaise,
 			pot, inGame, lastPlayerToRaise, maxBet, minBalance, isTie, gameState);
+		if (!gameState)
+			break;
 
 		winnerCount = 0;
 		maxPoints = getMaxPoints(players, playerCount, gameState);
 		getWinners(players, playerCount, maxPoints, winnerCount, winnerIndx, gameState);
+		if (!gameState)
+			break;
 
 		system("cls");
 		printWinnersHeader(players, playerCount, pot, winnerCount, gameState);
+		if (!gameState)
+			break;
 
 		isTie = false;
 		endOfGame(players, playerCount, inGame, pot, playerAnswer, lastRaise, 
 			maxBet, isTie, winnerCount, winnerIndx, gameState);
+		if (!gameState)
+			break;
 
 		if (isTie)
 			continue;
@@ -443,6 +470,9 @@ void playGame(Player* players, unsigned short& playerCount,
 
 		resetGameParams(players, currentPlayer, playerCount, lastRaise,
 			pot, inGame, lastPlayerToRaise, maxBet, isTie, gameState);
+
+		if (!gameState)
+			break;
 
 		if (inGame == 1)
 		{

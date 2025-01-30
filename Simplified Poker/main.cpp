@@ -22,11 +22,7 @@
 #include "File Handling.h"
 #include <stdlib.h>
 
-const unsigned TYPES_COUNT = 8;
-const unsigned SUITS_COUNT = 4;
-const unsigned CARDS_IN_DECK = TYPES_COUNT * SUITS_COUNT;
-
-const CardType CARD_TYPES[] = {
+const CardType CARD_TYPES[TYPES_COUNT] = {
 	{"7", 7},
 	{"8", 8},
 	{"9", 9},
@@ -37,7 +33,7 @@ const CardType CARD_TYPES[] = {
 	{"A", 11}
 };
 
-const CardSuit SUITS[] = {
+const CardSuit SUITS[SUITS_COUNT] = {
 	{'C', 1},
 	{'D', 2},
 	{'H', 3},

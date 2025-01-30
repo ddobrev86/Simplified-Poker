@@ -25,18 +25,18 @@ void orderPlayerCards(Player& player);
 
 bool isSevenOfClubs(const Card card);
 
-short sumCardValues(const Card* playerCards, size_t startIndex);
+short sumCardValues(const Card* playerCards, size_t startIndex, bool& gameState);
 
-short countIdenticalCardTypes(const Card* playerCards, size_t startIndex);
+short countIdenticalCardTypes(const Card* playerCards, size_t startIndex, bool& gameState);
 
-short countIdenticalCardSuits(const Card* playerCards, size_t startIndex);
+short countIdenticalCardSuits(const Card* playerCards, size_t startIndex, bool& gameState);
 
-unsigned short calculatePlayerPoints(const Card* playerCards);
+unsigned short calculatePlayerPoints(const Card* playerCards, bool& gameState);
 
-unsigned calculateMinPlayerBalance(const Player* players, const unsigned short playerCount);
+unsigned calculateMinPlayerBalance(const Player* players, const unsigned short playerCount, bool& gameState);
 
 void raise(Player& player, const Player* allPlayers, const unsigned short playerCount, 
-	unsigned& lastRaise, unsigned& pot, unsigned& maxBet, const unsigned minBalance);
+	unsigned& lastRaise, unsigned& pot, unsigned& maxBet, const unsigned minBalance, bool& gameState);
 
 void call(Player& player, unsigned& maxBet, unsigned& pot);
 
@@ -44,7 +44,11 @@ void fold(Player& player);
 
 void playPlayerAction(Player* players, const size_t currentPlayer, const unsigned short playerCount, 
 	const char playerAnswer, unsigned& lastRaise, unsigned& pot, unsigned short& inGame,
-	size_t& lastPlayerToRaise, unsigned& maxBet, const unsigned minBalance);
+	size_t& lastPlayerToRaise, unsigned& maxBet, const unsigned minBalance, bool& gameState);
+
+void playerAction(Player* players, const size_t currentPlayer, const unsigned short playerCount, 
+	char& playerAnswer, unsigned& lastRaise, unsigned& pot, unsigned short& inGame,
+	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance, bool& gameState);
 
 unsigned getMaxPoints(const Player* players, const unsigned short playerCount, bool& gameState);
 

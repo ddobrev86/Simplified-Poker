@@ -49,6 +49,8 @@ bool getGameInfo(Player*& players, unsigned short& playerCount, unsigned short& 
 
 		if (players[indx].chips > 0)
 			inGame++;
+		else
+			players[indx].isActive = false;
 	}
 
 	ifs.close();
