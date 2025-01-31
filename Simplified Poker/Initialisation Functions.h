@@ -61,9 +61,13 @@ void resetGameParams(Player*& players, size_t& currentPlayer,
 	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, 
 	unsigned& maxBet, bool& isTie, bool& gameState);
 
-void readyPlayersForTie(Player*& players, const unsigned short playerCount,
-	unsigned short& inGame, const unsigned pot, char& playerAnswer,
-	unsigned& lastRaise, unsigned& maxBet, bool& isTie, bool& gameState);
+void setCurrentPlayerForTie(Player* players, const unsigned short playerCount,
+	size_t& currentPlayer, size_t& lastPlayerToRaise, bool& gameState);
+
+void readyPlayersForTie(Player*& players, const unsigned short playerCount, 
+	unsigned short& inGame, const unsigned pot, char& playerAnswer, unsigned& lastRaise,
+	unsigned& maxBet, bool& isTie, size_t& currentPlayer, size_t& lastPlayerToRaise, 
+	bool& gameState);
 
 unsigned countActiveOrNotAllInPlayers(const Player* players, const unsigned short playerCount,
 	bool& gameState);

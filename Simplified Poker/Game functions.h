@@ -10,7 +10,7 @@
 * @idnumber 3MI0600520
 * @compiler VC
 *
-* <header file for helper functions that are used to execute game mechanics>
+* <header file for functions that are used to execute game mechanics>
 *
 */
 
@@ -59,9 +59,10 @@ void bettingPhase(Player* players, size_t& currentPlayer, const unsigned short p
 	char& playerAnswer, unsigned& lastRaise, unsigned& pot, unsigned short& inGame, 
 	size_t& lastPlayerToRaise, unsigned& maxBet, unsigned& minBalance, bool& isTie, bool& gameState);
 
-void endOfGame(Player*& players, const unsigned short playerCount, unsigned short& inGame, 
-	const unsigned pot, char& playerAnswer, unsigned& lastRaise, unsigned& maxBet, 
-	bool& isTie, const unsigned winnerCount, const size_t winnerIndx, bool& gameState);
+void endOfGame(Player*& players, const unsigned short playerCount, unsigned short& inGame,
+	const unsigned pot, char& playerAnswer, unsigned& lastRaise, unsigned& maxBet, bool& isTie, 
+	const unsigned winnerCount, const size_t winnerIndx, size_t& currentPlayer, 
+	size_t& lastPlayerToRaise, bool& gameState);
 
 void playGame(Player* players, unsigned short& playerCount,
 	Card* deck, const unsigned CARDS_IN_DECK, unsigned short inGame);

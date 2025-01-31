@@ -143,6 +143,7 @@ void printWinners(const Player* players, const unsigned short playerCount, bool&
 void printWinnersHeader(const Player* players, const unsigned short playerCount, 
 	const unsigned pot, size_t& winnerCount, bool& gameState)
 {
+	system("cls");
 	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
 		return;
@@ -277,10 +278,9 @@ void resetPlayerStates(Player*& players, const unsigned short playerCount,
 	}
 }
 
-void resetGameParams(Player*& players, size_t& currentPlayer,
-	const unsigned short playerCount, unsigned& lastRaise,
-	unsigned& pot, unsigned short& inGame, size_t& lastPlayerToRaise, 
-	unsigned& maxBet, bool& isTie, bool& gameState)
+void resetGameParams(Player*& players, size_t& currentPlayer, const unsigned short playerCount, 
+	unsigned& lastRaise, unsigned& pot, unsigned short& inGame, 
+	size_t& lastPlayerToRaise, unsigned& maxBet, bool& isTie, bool& gameState)
 {
 	inGame = 0;
 	pot = 0;
@@ -292,9 +292,29 @@ void resetGameParams(Player*& players, size_t& currentPlayer,
 	resetPlayerStates(players, playerCount, inGame, gameState);
 }
 
+void setCurrentPlayerForTie(Player* players, const unsigned short playerCount,
+	size_t& currentPlayer, size_t& lastPlayerToRaise, bool& gameState)
+{
+	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
+	{
+		return;
+	}
+
+	for (size_t indx = 0; indx < playerCount; indx++)
+	{
+		if (players[indx].isActive)
+		{
+			currentPlayer = indx;
+			lastPlayerToRaise = indx;
+			break;
+		}
+	}
+}
+
 void readyPlayersForTie(Player*& players, const unsigned short playerCount,
-	unsigned short& inGame, const unsigned pot, char& playerAnswer,
-	unsigned& lastRaise, unsigned& maxBet, bool& isTie, bool& gameState)
+	unsigned short& inGame, const unsigned pot, char& playerAnswer, unsigned& lastRaise, 
+	unsigned& maxBet, bool& isTie, size_t& currentPlayer, size_t& lastPlayerToRaise, 
+	bool& gameState)
 {
 	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
@@ -324,6 +344,8 @@ void readyPlayersForTie(Player*& players, const unsigned short playerCount,
 				askPlayerToJoinTie(players[indx], indx, pot, inGame, playerAnswer);
 		}
 	}
+
+	setCurrentPlayerForTie(players, playerCount, currentPlayer, lastPlayerToRaise, gameState);
 }
 
 unsigned countActiveOrNotAllInPlayers(const Player* players, const unsigned short playerCount, 

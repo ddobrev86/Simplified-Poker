@@ -1,3 +1,18 @@
+/**
+*
+* Solution to course project # 10
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2024/2025
+*
+* @author Dimitar Dobrev
+* @idnumber 3MI0600520
+* @compiler VC
+*
+* <file with definitions for functions that are used to execute game mechanics>
+*
+*/
+
 #include "Game functions.h"
 #include <iostream>
 
@@ -344,11 +359,10 @@ void bettingPhase(Player* players, size_t& currentPlayer, const unsigned short p
 
 	do
 	{
-		//compiler throws a warning for players[currentPlayer]
 		if (currentPlayer >= playerCount)
 			break;
 
-		if (!players[currentPlayer].isActive)
+		if (!players[currentPlayer].isActive || players[currentPlayer].allIn)
 		{
 			currentPlayer++;
 			currentPlayer %= playerCount;
@@ -359,11 +373,8 @@ void bettingPhase(Player* players, size_t& currentPlayer, const unsigned short p
 		printInfoHeader(players, playerCount, currentPlayer, pot,
 			lastRaise, maxBet, isTie, playerAnswer, gameState);
 
-		if (!players[currentPlayer].allIn)
-		{
-			playerAction(players, currentPlayer, playerCount, playerAnswer, lastRaise,
-				pot, inGame, lastPlayerToRaise, maxBet, minBalance, gameState);
-		}
+		playerAction(players, currentPlayer, playerCount, playerAnswer, lastRaise,
+			pot, inGame, lastPlayerToRaise, maxBet, minBalance, gameState);
 
 		if (inGame == 1)
 			break;
@@ -376,7 +387,8 @@ void bettingPhase(Player* players, size_t& currentPlayer, const unsigned short p
 
 void endOfGame(Player*& players, const unsigned short playerCount, unsigned short& inGame, 
 	const unsigned pot, char& playerAnswer, unsigned& lastRaise, unsigned& maxBet, 
-	bool& isTie, const unsigned winnerCount, const size_t winnerIndx, bool& gameState)
+	bool& isTie, const unsigned winnerCount, const size_t winnerIndx, 
+	size_t& currentPlayer, size_t& lastPlayerToRaise, bool& gameState)
 {
 	if (checkNullptr(players, gameState) || !validPlayerCount(playerCount, gameState))
 	{
@@ -386,7 +398,7 @@ void endOfGame(Player*& players, const unsigned short playerCount, unsigned shor
 	if (winnerCount > 1)
 	{
 		readyPlayersForTie(players, playerCount, inGame, pot / 2, playerAnswer,
-			lastRaise, maxBet, isTie, gameState);
+			lastRaise, maxBet, isTie, currentPlayer, lastPlayerToRaise, gameState);
 	}
 	else
 	{
@@ -435,14 +447,13 @@ void playGame(Player* players, unsigned short& playerCount,
 		if (!gameState)
 			break;
 
-		system("cls");
 		printWinnersHeader(players, playerCount, pot, winnerCount, gameState);
 		if (!gameState)
 			break;
 
 		isTie = false;
-		endOfGame(players, playerCount, inGame, pot, playerAnswer, lastRaise, 
-			maxBet, isTie, winnerCount, winnerIndx, gameState);
+		endOfGame(players, playerCount, inGame, pot, playerAnswer, lastRaise, maxBet, 
+			isTie, winnerCount, winnerIndx, currentPlayer, lastPlayerToRaise, gameState);
 		if (!gameState)
 			break;
 
@@ -476,6 +487,7 @@ void playGame(Player* players, unsigned short& playerCount,
 
 		if (inGame == 1)
 		{
+			system("cls");
 			std::cout << "\nPlayer " << winnerIndx + 1 << " is the only player left and is the winner\n\n";
 			break;
 		}
